@@ -1,0 +1,69 @@
+1;1000;Aktiva;0;debit
+2;1100;Aktiva Lancar;0;debit
+3;1101;Kas Kecil;0;debit
+4;1102;Kas Bank;0;debit
+5;1103;Piutang Usaha;0;debit
+6;1104;Perlengkapan Kantor;0;debit
+7;1200;Aktiva Tetap;0;debit
+8;1201;CCTV;0;debit
+9;1202;Akumulasi Penyusutan CCTV;0;debit
+10;1203;Modem Internet;0;debit
+11;1204;Akumulasi Penyusutan Modem Internet;0;debit
+12;1205;Kompor Gas;0;debit
+13;1206;Akumulasi Penyusutan Kompor Gas;0;credit
+14;1207;Kunci Mesin;0;debit
+15;1208;Akumulasi Penyusutan Kunci Mesin;0;credit
+16;1209;Lemari Kayu;0;debit
+17;1210;Akumulasi Penyusutan Lemari Kayu;0;credit
+18;1211;Eskavator (Alat Berat);0;debit
+19;1212;Akumulasi Penyusutan Eskavator (Alat Berat);0;credit
+20;1213;Ayakan Cor;0;debit
+21;1214;Akumulasi Penyusutan Ayakan Cor;0;credit
+22;1215;Ayakan Super;0;debit
+23;1216;Akumulasi Penyusutan Ayakan Super;0;credit
+24;2000;Hutang Usaha;0;debit
+25;2100;Hutang Jangka Pendek;0;credit
+26;2101;Hutang Gaji;0;debit
+27;2102;Hutang Listrik, Air dan Telepon;0;credit
+28;2200;Hutang Jangka Panjang;0;credit
+29;2201;Hutang Bank;0;credit
+30;3000;Modal;0;credit
+31;3001;Modal Bapak Beni;0;credit
+32;3002;Modal Bapak Eka;0;credit
+33;3003;Modal Bapak Budi;0;credit
+34;3100;Laba Ditahan/Modal Cadangan;0;credit
+35;3101;Laba Ditahan/Modal Cadangan;0;credit
+36;3102;Modal Cadangan;0;credit
+37;4000;Penjualan;0;credit
+38;5000;Biaya-Biaya;0;credit
+39;5100;Biaya Gaji Operator;0;credit
+40;5101;Biaya Solar;0;credit
+41;5102;Biaya Sewa Lahan;0;credit
+42;5103;Biaya Oli dan Pelumas;0;credit
+43;5104;Biaya Spare Part;0;debit
+44;5105;Biaya Penyusutan ;0;debit
+45;5106;Biaya Listrik, Air dan Telepon;0;debit
+46;5107;Biaya Pemeliharaan Alat;0;debit
+47;5108;Biaya Retribusi ;0;debit
+48;5109;Biaya Sewa;0;debit
+49;5110;Biaya Promosi;0;debit
+50;5111;Biaya Asuransi;0;debit
+51;5112;Biaya Administrasi;0;debit
+52;5113;Biaya Pajak;0;debit
+53;5114;Biaya Lain-Lain;0;debit
+54;5115;Biaya Gaji Operator;0;debit
+55;5116;Biaya Konsumsi;0;debit
+56;5117;Biaya Gaji Helper;0;debit
+57;5118;Biaya Tukang Gosek;0;debit
+58;5119;Biaya Atensi Desa;0;debit
+59;5120;Biaya Gaji Kasir;0;debit
+60;5111;Biaya Asuransi;0;debit
+61;5112;Biaya Administrasi;0;debit
+62;5113;Biaya Pajak;0;debit
+63;5114;Biaya Lain-Lain;0;debit
+64;5115;Biaya Gaji Operator;0;debit
+65;5116;Biaya Konsumsi;0;debit
+66;5117;Biaya Gaji Helper;0;debit
+67;5118;Biaya Tukang Gosek;0;debit
+68;5119;Biaya Atensi Desa;0;debit
+69;5120;Biaya Gaji Kasir;0;debit

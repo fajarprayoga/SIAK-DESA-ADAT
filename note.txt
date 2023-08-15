@@ -1,0 +1,3 @@
+
+refresh data table
+$('.data-table').DataTable().ajax.reload();
