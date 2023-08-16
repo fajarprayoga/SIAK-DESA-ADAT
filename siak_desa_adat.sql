@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jan 10, 2022 at 12:10 PM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 7.3.31
+-- Host: localhost
+-- Waktu pembuatan: 16 Agu 2023 pada 02.04
+-- Versi server: 10.4.27-MariaDB
+-- Versi PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,27 +18,27 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `siak`
+-- Database: `siak_desa_adat`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `accounts`
+-- Struktur dari tabel `accounts`
 --
 
 CREATE TABLE `accounts` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_delete` tinyint(1) NOT NULL,
-  `normal_balance` enum('debit','credit') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `is_delete` tinyint(1) NOT NULL DEFAULT 0,
+  `normal_balance` enum('debit','credit') NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `accounts`
+-- Dumping data untuk tabel `accounts`
 --
 
 INSERT INTO `accounts` (`id`, `code`, `name`, `is_delete`, `normal_balance`, `created_at`, `updated_at`) VALUES
@@ -100,27 +100,29 @@ INSERT INTO `accounts` (`id`, `code`, `name`, `is_delete`, `normal_balance`, `cr
 (56, '5117', 'Biaya Gaji Helper', 0, 'debit', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (57, '5118', 'Biaya Tukang Gosek', 0, 'debit', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (58, '5119', 'Biaya Atensi Desa', 0, 'debit', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(59, '5120', 'Biaya Gaji Kasir', 0, 'debit', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+(59, '5120', 'Biaya Gaji Kasir', 0, 'debit', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(5564, '-q908wdwp;l', 'ascasca', 1, 'debit', '2023-08-15 10:34:17', '2023-08-15 10:36:20'),
+(5565, 'asdasd', 'asdasd', 1, 'debit', '2023-08-15 10:45:52', '2023-08-15 10:46:35');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `failed_jobs`
+-- Struktur dari tabel `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gosek`
+-- Struktur dari tabel `gosek`
 --
 
 CREATE TABLE `gosek` (
@@ -132,7 +134,7 @@ CREATE TABLE `gosek` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `gosek`
+-- Dumping data untuk tabel `gosek`
 --
 
 INSERT INTO `gosek` (`id`, `transaction_id`, `expense`, `created_at`, `updated_at`) VALUES
@@ -145,26 +147,27 @@ INSERT INTO `gosek` (`id`, `transaction_id`, `expense`, `created_at`, `updated_a
 (9, 28, '500000.00', '2022-01-03 16:00:00', '2022-01-05 11:12:48'),
 (10, 37, '5000.00', '2022-01-06 16:00:00', '2022-01-07 00:12:10'),
 (11, 78, '0.00', '2022-01-09 16:00:00', '2022-01-10 07:27:44'),
-(12, 87, '4500.00', '2022-01-09 16:00:00', '2022-01-10 09:24:38');
+(12, 87, '4500.00', '2022-01-09 16:00:00', '2022-01-10 09:24:38'),
+(13, 176, '32232323.00', '2023-08-14 16:00:00', '2023-08-15 10:45:42');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `incomestatement`
+-- Struktur dari tabel `incomestatement`
 --
 
 CREATE TABLE `incomestatement` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `register` date NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','rejected','approved') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(191) NOT NULL,
+  `status` enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
+  `note` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `incomestatement`
+-- Dumping data untuk tabel `incomestatement`
 --
 
 INSERT INTO `incomestatement` (`id`, `register`, `title`, `status`, `note`, `created_at`, `updated_at`) VALUES
@@ -176,23 +179,23 @@ INSERT INTO `incomestatement` (`id`, `register`, `title`, `status`, `note`, `cre
 -- --------------------------------------------------------
 
 --
--- Table structure for table `incomestatement_detail`
+-- Struktur dari tabel `incomestatement_detail`
 --
 
 CREATE TABLE `incomestatement_detail` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `incomestatement_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) NOT NULL,
   `amount` decimal(11,0) DEFAULT 0,
   `account_id` bigint(20) UNSIGNED DEFAULT NULL,
   `expense` decimal(11,0) NOT NULL DEFAULT 0,
-  `type` enum('income','expense') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` enum('income','expense') NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `incomestatement_detail`
+-- Dumping data untuk tabel `incomestatement_detail`
 --
 
 INSERT INTO `incomestatement_detail` (`id`, `incomestatement_id`, `name`, `amount`, `account_id`, `expense`, `type`, `created_at`, `updated_at`) VALUES
@@ -308,46 +311,47 @@ INSERT INTO `incomestatement_detail` (`id`, `incomestatement_id`, `name`, `amoun
 -- --------------------------------------------------------
 
 --
--- Table structure for table `journals`
+-- Struktur dari tabel `journals`
 --
 
 CREATE TABLE `journals` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `register` date NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','rejected','approved') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(191) NOT NULL,
+  `description` text NOT NULL,
+  `status` enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
+  `note` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `journals`
+-- Dumping data untuk tabel `journals`
 --
 
 INSERT INTO `journals` (`id`, `register`, `title`, `description`, `status`, `note`, `created_at`, `updated_at`) VALUES
-(6, '2022-01-05', 'Jurnal periode 05 01 22', 'Jurnal periode 05 01 22', 'rejected', 'kekeliruan pada keterangan', '2022-01-05 11:30:36', '2022-01-10 09:49:51');
+(6, '2022-01-05', 'Jurnal periode 05 01 22', 'Jurnal periode 05 01 22', 'rejected', 'kekeliruan pada keterangan', '2022-01-05 11:30:36', '2022-01-10 09:49:51'),
+(7, '2023-08-16', 'asdasd', 'asdasdasdasd', 'pending', NULL, '2023-08-15 10:47:32', '2023-08-15 10:47:32');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `journal_details`
+-- Struktur dari tabel `journal_details`
 --
 
 CREATE TABLE `journal_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `account_id` bigint(20) UNSIGNED NOT NULL,
   `journal_id` bigint(20) UNSIGNED NOT NULL,
-  `types` enum('debit','credit') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `types` enum('debit','credit') NOT NULL,
   `amount` decimal(11,0) NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `journal_details`
+-- Dumping data untuk tabel `journal_details`
 --
 
 INSERT INTO `journal_details` (`id`, `account_id`, `journal_id`, `types`, `amount`, `description`, `created_at`, `updated_at`) VALUES
@@ -357,27 +361,29 @@ INSERT INTO `journal_details` (`id`, `account_id`, `journal_id`, `types`, `amoun
 (12, 19, 6, 'credit', '610000', 'eksavator', NULL, NULL),
 (13, 21, 6, 'credit', '400000', 'ayakan cor', NULL, NULL),
 (14, 23, 6, 'credit', '450000', 'ayakan super', NULL, NULL),
-(15, 27, 6, 'credit', '250000', '-', NULL, NULL);
+(15, 27, 6, 'credit', '250000', '-', NULL, NULL),
+(16, 4, 7, 'debit', '10000', 'adsasdas', '2023-08-15 10:47:32', '2023-08-15 10:47:32'),
+(17, 3, 7, 'credit', '10000', 'asfasdds', '2023-08-15 10:47:32', '2023-08-15 10:47:32');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ledgers`
+-- Struktur dari tabel `ledgers`
 --
 
 CREATE TABLE `ledgers` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `register` date NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','rejected','approved') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `status` enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
+  `note` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `ledgers`
+-- Dumping data untuk tabel `ledgers`
 --
 
 INSERT INTO `ledgers` (`id`, `register`, `title`, `description`, `status`, `note`, `created_at`, `updated_at`) VALUES
@@ -387,7 +393,7 @@ INSERT INTO `ledgers` (`id`, `register`, `title`, `description`, `status`, `note
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ledger_details`
+-- Struktur dari tabel `ledger_details`
 --
 
 CREATE TABLE `ledger_details` (
@@ -395,15 +401,15 @@ CREATE TABLE `ledger_details` (
   `date` date NOT NULL,
   `ledger_id` bigint(20) UNSIGNED NOT NULL,
   `account_id` bigint(20) UNSIGNED NOT NULL,
-  `types` enum('debit','credit') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `types` enum('debit','credit') NOT NULL,
   `amount` decimal(11,0) NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `ledger_details`
+-- Dumping data untuk tabel `ledger_details`
 --
 
 INSERT INTO `ledger_details` (`id`, `date`, `ledger_id`, `account_id`, `types`, `amount`, `description`, `created_at`, `updated_at`) VALUES
@@ -425,40 +431,42 @@ INSERT INTO `ledger_details` (`id`, `date`, `ledger_id`, `account_id`, `types`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `materials`
+-- Struktur dari tabel `materials`
 --
 
 CREATE TABLE `materials` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) NOT NULL,
   `is_delete` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `materials`
+-- Dumping data untuk tabel `materials`
 --
 
 INSERT INTO `materials` (`id`, `name`, `is_delete`, `created_at`, `updated_at`) VALUES
 (1, 'Batu', 0, '2021-12-26 22:48:19', '2021-12-26 22:48:19'),
 (2, 'Pasir', 0, '2022-01-04 08:32:43', '2022-01-10 07:33:43'),
-(3, 'Koral', 1, '2022-01-10 07:34:10', '2022-01-10 07:34:25');
+(3, 'Koral', 1, '2022-01-10 07:34:10', '2022-01-10 07:34:25'),
+(4, '1buku', 1, '2023-08-15 10:37:10', '2023-08-15 10:38:01'),
+(5, 'sdadasd1', 1, '2023-08-15 10:46:42', '2023-08-15 10:46:54');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Struktur dari tabel `migrations`
 --
 
 CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(191) NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Dumping data untuk tabel `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -484,98 +492,102 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_resets`
+-- Struktur dari tabel `password_resets`
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `token` varchar(191) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transactions`
+-- Struktur dari tabel `transactions`
 --
 
 CREATE TABLE `transactions` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `vehicle_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `vehicle` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `vehicle_number` varchar(255) NOT NULL,
+  `vehicle` varchar(255) DEFAULT NULL,
   `material_id` bigint(20) UNSIGNED DEFAULT NULL,
   `price_material` int(11) DEFAULT NULL,
   `expense` decimal(11,0) NOT NULL DEFAULT 0,
-  `nomor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nomor` varchar(255) DEFAULT NULL,
+  `is_delete` tinyint(1) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `transactions`
+-- Dumping data untuk tabel `transactions`
 --
 
-INSERT INTO `transactions` (`id`, `vehicle_number`, `vehicle`, `material_id`, `price_material`, `expense`, `nomor`, `created_at`, `updated_at`) VALUES
-(26, 'DK 1020 lB', 'PICKUP', 2, 200000, '0', '210', '2022-01-04 16:00:00', '2022-01-05 11:07:29'),
-(27, 'DK 9998 AB', 'Truk Wawan', 2, 200000, '0', '200', '2022-01-09 16:00:00', '2022-01-10 02:08:08'),
-(28, 'DK 3992 CB', 'Truk Wawan', 1, 300000, '0', '200', '2022-01-03 16:00:00', '2022-01-05 11:12:48'),
-(29, 'operator', NULL, NULL, NULL, '1000', NULL, '2022-01-03 16:00:00', NULL),
-(30, 'kasir', NULL, NULL, NULL, '8000', NULL, '2022-01-03 16:00:00', NULL),
-(31, 'helper', NULL, NULL, NULL, '200', NULL, '2022-01-03 16:00:00', NULL),
-(32, 'jalan 40', NULL, NULL, NULL, '9000', NULL, '2022-01-03 16:00:00', NULL),
-(33, 'pemilik', NULL, NULL, NULL, '-177500', NULL, '2022-01-03 16:00:00', NULL),
-(34, 'jalan desa', NULL, NULL, NULL, '4000', NULL, '2022-01-03 16:00:00', NULL),
-(35, 'lain-lain', NULL, NULL, NULL, '1000', NULL, '2022-01-03 16:00:00', NULL),
-(36, 'solar', NULL, NULL, NULL, '7000', NULL, '2022-01-03 16:00:00', NULL),
-(37, 'DK 1020 lB', 'Truk Wawan', 1, 300000, '0', '200', '2022-01-06 16:00:00', '2022-01-07 00:12:10'),
-(70, 'operator', NULL, NULL, NULL, '1000', NULL, '2022-01-04 16:00:00', NULL),
-(71, 'kasir', NULL, NULL, NULL, '3000', NULL, '2022-01-04 16:00:00', NULL),
-(72, 'helper', NULL, NULL, NULL, '2000', NULL, '2022-01-04 16:00:00', NULL),
-(73, 'jalan 40', NULL, NULL, NULL, '3000', NULL, '2022-01-04 16:00:00', NULL),
-(74, 'pemilik', NULL, NULL, NULL, '-1312500', NULL, '2022-01-04 16:00:00', NULL),
-(75, 'jalan desa', NULL, NULL, NULL, '1000', NULL, '2022-01-04 16:00:00', NULL),
-(76, 'lain-lain', NULL, NULL, NULL, '5000', NULL, '2022-01-04 16:00:00', NULL),
-(77, 'solar', NULL, NULL, NULL, '3000', NULL, '2022-01-04 16:00:00', NULL),
-(78, 'DK 3992 CB', 'Truk', 2, 300000, '0', '10', '2022-01-09 16:00:00', '2022-01-10 07:27:44'),
-(87, 'DK 9998 AB', 'Truk', 2, 300000, '0', '200', '2022-01-09 16:00:00', '2022-01-10 09:24:38'),
-(168, 'operator', NULL, NULL, NULL, '100000', NULL, '2022-01-09 16:00:00', NULL),
-(169, 'kasir', NULL, NULL, NULL, '25000', NULL, '2022-01-09 16:00:00', NULL),
-(170, 'helper', NULL, NULL, NULL, '50000', NULL, '2022-01-09 16:00:00', NULL),
-(171, 'jalan 40', NULL, NULL, NULL, '10000', NULL, '2022-01-09 16:00:00', NULL),
-(172, 'pemilik', NULL, NULL, NULL, '187625', NULL, '2022-01-09 16:00:00', NULL),
-(173, 'jalan desa', NULL, NULL, NULL, '25000', NULL, '2022-01-09 16:00:00', NULL),
-(174, 'lain-lain', NULL, NULL, NULL, '0', NULL, '2022-01-09 16:00:00', NULL),
-(175, 'solar', NULL, NULL, NULL, '0', NULL, '2022-01-09 16:00:00', NULL);
+INSERT INTO `transactions` (`id`, `vehicle_number`, `vehicle`, `material_id`, `price_material`, `expense`, `nomor`, `is_delete`, `status`, `created_at`, `updated_at`) VALUES
+(26, 'DK 1020 lB', 'PICKUP', 2, 200000, '0', '210', 1, 1, '2022-01-04 16:00:00', '2022-01-05 11:07:29'),
+(27, 'DK 9998 AB', 'Truk Wawan', 2, 200000, '0', '200', 1, 1, '2022-01-09 16:00:00', '2022-01-10 02:08:08'),
+(28, 'DK 3992 CB', 'Truk Wawan', 1, 300000, '0', '200', 1, 1, '2022-01-03 16:00:00', '2022-01-05 11:12:48'),
+(29, 'operator', NULL, NULL, NULL, '1000', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(30, 'kasir', NULL, NULL, NULL, '8000', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(31, 'helper', NULL, NULL, NULL, '200', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(32, 'jalan 40', NULL, NULL, NULL, '9000', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(33, 'pemilik', NULL, NULL, NULL, '-177500', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(34, 'jalan desa', NULL, NULL, NULL, '4000', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(35, 'lain-lain', NULL, NULL, NULL, '1000', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(36, 'solar', NULL, NULL, NULL, '7000', NULL, 1, 1, '2022-01-03 16:00:00', NULL),
+(37, 'DK 1020 lB', 'Truk Wawan', 1, 300000, '0', '200', 1, 1, '2022-01-06 16:00:00', '2022-01-07 00:12:10'),
+(70, 'operator', NULL, NULL, NULL, '1000', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(71, 'kasir', NULL, NULL, NULL, '3000', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(72, 'helper', NULL, NULL, NULL, '2000', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(73, 'jalan 40', NULL, NULL, NULL, '3000', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(74, 'pemilik', NULL, NULL, NULL, '-1312500', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(75, 'jalan desa', NULL, NULL, NULL, '1000', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(76, 'lain-lain', NULL, NULL, NULL, '5000', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(77, 'solar', NULL, NULL, NULL, '3000', NULL, 1, 1, '2022-01-04 16:00:00', NULL),
+(78, 'DK 3992 CB', 'Truk', 2, 300000, '0', '10', 1, 1, '2022-01-09 16:00:00', '2022-01-10 07:27:44'),
+(87, 'DK 9998 AB', 'Truk', 2, 300000, '0', '200', 1, 1, '2022-01-09 16:00:00', '2022-01-10 09:24:38'),
+(168, 'operator', NULL, NULL, NULL, '100000', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(169, 'kasir', NULL, NULL, NULL, '25000', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(170, 'helper', NULL, NULL, NULL, '50000', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(171, 'jalan 40', NULL, NULL, NULL, '10000', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(172, 'pemilik', NULL, NULL, NULL, '187625', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(173, 'jalan desa', NULL, NULL, NULL, '25000', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(174, 'lain-lain', NULL, NULL, NULL, '0', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(175, 'solar', NULL, NULL, NULL, '0', NULL, 1, 1, '2022-01-09 16:00:00', NULL),
+(176, '13q3dad', 'asdasdasd', 2, 3782323, '0', 'TRS00001', 0, 1, '2023-08-14 16:00:00', '2023-08-15 10:45:42');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `trial_balance`
+-- Struktur dari tabel `trial_balance`
 --
 
 CREATE TABLE `trial_balance` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `register` date NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','rejected','approved') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `status` enum('pending','rejected','approved') NOT NULL DEFAULT 'pending',
+  `note` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `trial_balance`
+-- Dumping data untuk tabel `trial_balance`
 --
 
 INSERT INTO `trial_balance` (`id`, `register`, `title`, `description`, `status`, `note`, `created_at`, `updated_at`) VALUES
 (42, '2022-01-30', 'Periode Januari 2022', 'Neraca saldo periode Januari 2022', 'approved', NULL, '2022-01-10 08:22:21', '2022-01-10 09:54:59'),
-(44, '2022-01-10', 'Neraca Saldo 20020', 'Neraca Saldo 20020', 'rejected', 'deskripsi cek lagi', '2022-01-10 09:20:33', '2022-01-10 09:53:41');
+(44, '2022-01-10', 'Neraca Saldo 20020', 'Neraca Saldo 20020', 'rejected', 'deskripsi cek lagi', '2022-01-10 09:20:33', '2022-01-10 09:53:41'),
+(45, '2023-08-15', 'asdasdkn111', 'k;ljkj', 'pending', NULL, '2023-08-15 10:54:08', '2023-08-15 10:54:08');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `trial_balance_detail`
+-- Struktur dari tabel `trial_balance_detail`
 --
 
 CREATE TABLE `trial_balance_detail` (
@@ -589,7 +601,7 @@ CREATE TABLE `trial_balance_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `trial_balance_detail`
+-- Dumping data untuk tabel `trial_balance_detail`
 --
 
 INSERT INTO `trial_balance_detail` (`id`, `date`, `trial_balance_id`, `account_id`, `amount`, `created_at`, `updated_at`) VALUES
@@ -710,258 +722,320 @@ INSERT INTO `trial_balance_detail` (`id`, `date`, `trial_balance_id`, `account_i
 (292, '2022-01-10', 44, 56, '0', '2022-01-10 09:20:33', '2022-01-10 09:20:33'),
 (293, '2022-01-10', 44, 57, '0', '2022-01-10 09:20:33', '2022-01-10 09:20:33'),
 (294, '2022-01-10', 44, 58, '0', '2022-01-10 09:20:33', '2022-01-10 09:20:33'),
-(295, '2022-01-10', 44, 59, '0', '2022-01-10 09:20:33', '2022-01-10 09:20:33');
+(295, '2022-01-10', 44, 59, '0', '2022-01-10 09:20:33', '2022-01-10 09:20:33'),
+(296, '2023-08-15', 45, 5565, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(297, '2023-08-15', 45, 5564, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(298, '2023-08-15', 45, 1, '2000000', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(299, '2023-08-15', 45, 2, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(300, '2023-08-15', 45, 3, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(301, '2023-08-15', 45, 4, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(302, '2023-08-15', 45, 5, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(303, '2023-08-15', 45, 6, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(304, '2023-08-15', 45, 7, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(305, '2023-08-15', 45, 8, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(306, '2023-08-15', 45, 9, '-250000', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(307, '2023-08-15', 45, 10, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(308, '2023-08-15', 45, 11, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(309, '2023-08-15', 45, 12, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(310, '2023-08-15', 45, 13, '-40000', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(311, '2023-08-15', 45, 14, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(312, '2023-08-15', 45, 15, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(313, '2023-08-15', 45, 16, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(314, '2023-08-15', 45, 17, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(315, '2023-08-15', 45, 18, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(316, '2023-08-15', 45, 19, '-610000', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(317, '2023-08-15', 45, 20, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(318, '2023-08-15', 45, 21, '-400000', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(319, '2023-08-15', 45, 22, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(320, '2023-08-15', 45, 23, '-450000', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(321, '2023-08-15', 45, 24, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(322, '2023-08-15', 45, 25, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(323, '2023-08-15', 45, 26, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(324, '2023-08-15', 45, 27, '-250000', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(325, '2023-08-15', 45, 28, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(326, '2023-08-15', 45, 29, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(327, '2023-08-15', 45, 30, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(328, '2023-08-15', 45, 31, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(329, '2023-08-15', 45, 32, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(330, '2023-08-15', 45, 33, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(331, '2023-08-15', 45, 34, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(332, '2023-08-15', 45, 35, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(333, '2023-08-15', 45, 36, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(334, '2023-08-15', 45, 37, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(335, '2023-08-15', 45, 38, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(336, '2023-08-15', 45, 39, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(337, '2023-08-15', 45, 40, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(338, '2023-08-15', 45, 41, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(339, '2023-08-15', 45, 42, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(340, '2023-08-15', 45, 43, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(341, '2023-08-15', 45, 44, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(342, '2023-08-15', 45, 45, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(343, '2023-08-15', 45, 46, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(344, '2023-08-15', 45, 47, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(345, '2023-08-15', 45, 48, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(346, '2023-08-15', 45, 49, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(347, '2023-08-15', 45, 50, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(348, '2023-08-15', 45, 51, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(349, '2023-08-15', 45, 52, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(350, '2023-08-15', 45, 53, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(351, '2023-08-15', 45, 54, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(352, '2023-08-15', 45, 55, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(353, '2023-08-15', 45, 56, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(354, '2023-08-15', 45, 57, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(355, '2023-08-15', 45, 58, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08'),
+(356, '2023-08-15', 45, 59, '0', '2023-08-15 10:54:08', '2023-08-15 10:54:08');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(191) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `role` enum('admin','manager','accounting','cashier') COLLATE utf8mb4_unicode_ci NOT NULL
+  `role` enum('admin','manager','accounting','cashier','employes') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `role`) VALUES
-(1, 'accounting', 'accounting@gmail.com', NULL, '$2y$10$Jj6OiZjg4ZYKsJHaDaUF9OU6blc/Ykvk8X7lEADRS8TY1Vmo3zrZa', NULL, NULL, NULL, 'accounting'),
-(2, 'cashier', 'cashier@gmail.com', NULL, '$2y$10$Jj6OiZjg4ZYKsJHaDaUF9OU6blc/Ykvk8X7lEADRS8TY1Vmo3zrZa', NULL, NULL, NULL, 'cashier'),
-(3, 'manager', 'manager@gmail.com', NULL, '$2y$10$Jj6OiZjg4ZYKsJHaDaUF9OU6blc/Ykvk8X7lEADRS8TY1Vmo3zrZa', NULL, NULL, NULL, 'manager');
+(1, 'accounting', 'accounting@gmail.com', NULL, '$2y$10$vP.rPfe5eUYY8mHEkc7FdOt3EsZhJXZ58IiLWL7CLW1KE1eaQMR8e', NULL, NULL, NULL, 'accounting'),
+(2, 'cashier', 'cashier@gmail.com', NULL, '$2y$10$vP.rPfe5eUYY8mHEkc7FdOt3EsZhJXZ58IiLWL7CLW1KE1eaQMR8e', NULL, NULL, NULL, 'cashier'),
+(3, 'manager', 'manager@gmail.com', NULL, '$2y$10$vP.rPfe5eUYY8mHEkc7FdOt3EsZhJXZ58IiLWL7CLW1KE1eaQMR8e', NULL, NULL, NULL, 'manager'),
+(4, 'employes1', 'employes1@gmail.com', NULL, '$2y$10$vP.rPfe5eUYY8mHEkc7FdOt3EsZhJXZ58IiLWL7CLW1KE1eaQMR8e', NULL, NULL, NULL, 'employes');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `accounts`
+-- Indeks untuk tabel `accounts`
 --
 ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `failed_jobs`
+-- Indeks untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `gosek`
+-- Indeks untuk tabel `gosek`
 --
 ALTER TABLE `gosek`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `incomestatement`
+-- Indeks untuk tabel `incomestatement`
 --
 ALTER TABLE `incomestatement`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `incomestatement_detail`
+-- Indeks untuk tabel `incomestatement_detail`
 --
 ALTER TABLE `incomestatement_detail`
   ADD PRIMARY KEY (`id`),
   ADD KEY `incomestatement_detail_incomestatement_id_foreign` (`incomestatement_id`);
 
 --
--- Indexes for table `journals`
+-- Indeks untuk tabel `journals`
 --
 ALTER TABLE `journals`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `journal_details`
+-- Indeks untuk tabel `journal_details`
 --
 ALTER TABLE `journal_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `journal_details_journal_id_foreign` (`journal_id`);
 
 --
--- Indexes for table `ledgers`
+-- Indeks untuk tabel `ledgers`
 --
 ALTER TABLE `ledgers`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ledger_details`
+-- Indeks untuk tabel `ledger_details`
 --
 ALTER TABLE `ledger_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `ledger_details_ledger_id_foreign` (`ledger_id`);
 
 --
--- Indexes for table `materials`
+-- Indeks untuk tabel `materials`
 --
 ALTER TABLE `materials`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `migrations`
+-- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `password_resets`
+-- Indeks untuk tabel `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `transactions`
+-- Indeks untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `trial_balance`
+-- Indeks untuk tabel `trial_balance`
 --
 ALTER TABLE `trial_balance`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `trial_balance_detail`
+-- Indeks untuk tabel `trial_balance_detail`
 --
 ALTER TABLE `trial_balance_detail`
   ADD PRIMARY KEY (`id`),
   ADD KEY `trial_balance_detail_trial_balance_id_foreign` (`trial_balance_id`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `accounts`
+-- AUTO_INCREMENT untuk tabel `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5564;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5566;
 
 --
--- AUTO_INCREMENT for table `failed_jobs`
+-- AUTO_INCREMENT untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `gosek`
+-- AUTO_INCREMENT untuk tabel `gosek`
 --
 ALTER TABLE `gosek`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT for table `incomestatement`
+-- AUTO_INCREMENT untuk tabel `incomestatement`
 --
 ALTER TABLE `incomestatement`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
--- AUTO_INCREMENT for table `incomestatement_detail`
+-- AUTO_INCREMENT untuk tabel `incomestatement_detail`
 --
 ALTER TABLE `incomestatement_detail`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=269;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=296;
 
 --
--- AUTO_INCREMENT for table `journals`
+-- AUTO_INCREMENT untuk tabel `journals`
 --
 ALTER TABLE `journals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `journal_details`
+-- AUTO_INCREMENT untuk tabel `journal_details`
 --
 ALTER TABLE `journal_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT untuk tabel `ledgers`
+--
+ALTER TABLE `ledgers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `ledgers`
---
-ALTER TABLE `ledgers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `ledger_details`
+-- AUTO_INCREMENT untuk tabel `ledger_details`
 --
 ALTER TABLE `ledger_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT for table `materials`
+-- AUTO_INCREMENT untuk tabel `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `transactions`
+-- AUTO_INCREMENT untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
 
 --
--- AUTO_INCREMENT for table `trial_balance`
+-- AUTO_INCREMENT untuk tabel `trial_balance`
 --
 ALTER TABLE `trial_balance`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
--- AUTO_INCREMENT for table `trial_balance_detail`
+-- AUTO_INCREMENT untuk tabel `trial_balance_detail`
 --
 ALTER TABLE `trial_balance_detail`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=296;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=357;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Constraints for dumped tables
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Constraints for table `incomestatement_detail`
+-- Ketidakleluasaan untuk tabel `incomestatement_detail`
 --
 ALTER TABLE `incomestatement_detail`
   ADD CONSTRAINT `incomestatement_detail_incomestatement_id_foreign` FOREIGN KEY (`incomestatement_id`) REFERENCES `incomestatement` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `journal_details`
+-- Ketidakleluasaan untuk tabel `journal_details`
 --
 ALTER TABLE `journal_details`
   ADD CONSTRAINT `journal_details_journal_id_foreign` FOREIGN KEY (`journal_id`) REFERENCES `journals` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `ledger_details`
+-- Ketidakleluasaan untuk tabel `ledger_details`
 --
 ALTER TABLE `ledger_details`
   ADD CONSTRAINT `ledger_details_ledger_id_foreign` FOREIGN KEY (`ledger_id`) REFERENCES `ledgers` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `trial_balance_detail`
+-- Ketidakleluasaan untuk tabel `trial_balance_detail`
 --
 ALTER TABLE `trial_balance_detail`
   ADD CONSTRAINT `trial_balance_detail_trial_balance_id_foreign` FOREIGN KEY (`trial_balance_id`) REFERENCES `trial_balance` (`id`) ON DELETE CASCADE;
