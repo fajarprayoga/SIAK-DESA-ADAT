@@ -6,7 +6,7 @@
         <div class="breadcrumb-title pe-3 border-right-0">@lang('global.transaction.transaction')</div>
         <div class="ms-auto">
             <div class="btn-group">
-                @can('isCashier')
+                @can('isEmployes')
                     <a href="{{ route('cashier.transaction.create') }}" class="text-white btn btn-primary ">@lang('global.app.add')</a>
                 @endcan
             </div>
@@ -26,15 +26,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 0 ?>
-                        @foreach ($transactions as $index=> $transaction)
+                        <?php $no = 0; ?>
+                        @foreach ($transactions as $index => $transaction)
                             <tr>
-                                <td>{{$no+=1}}</td>
+                                <td>{{ $no += 1 }}</td>
                                 <td>
-                                   {{$index }}
+                                    {{ $index }}
                                 </td>
                                 <td>
-                                    <a href="{{route('cashier.transaction.show', $index)}}" class="btn btn-sm btn-info">Detail</a>
+                                    <a href="{{ route('cashier.transaction.show', $index) }}"
+                                        class="btn btn-sm btn-info">Detail</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -46,7 +47,5 @@
 @endsection
 
 @section('script')
-    <script type="text/javascript">
-
-    </script>
+    <script type="text/javascript"></script>
 @endsection

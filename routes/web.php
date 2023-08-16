@@ -39,27 +39,26 @@ Route::group(['prefix' => 'accounting', 'as' => 'accounting.', 'namespace' => 'A
     Route::resource('journal', 'JournalController');
     Route::get('/journaldata', 'JournalController@journaldata')->name('journal.journaldata');
     Route::delete('/detail/delete/{id}', 'JournalController@deleteItemDetail')->name('journal.deleteItemDetail');
-    Route::get('journal/report/{id}','JournalController@report')->name('journal.report');
+    Route::get('journal/report/{id}', 'JournalController@report')->name('journal.report');
     Route::get('/journalexpense/{date}', 'JournalController@expense')->name('journal.expense');
     // Buku Besar (Ledger)
 
     Route::resource('ledger', 'LedgerController');
     Route::get('/ledgerdata', 'LedgerController@ledgerdata')->name('ledger.ledgerdata');
-    Route::get('ledger/report/{id}','LedgerController@report')->name('ledger.report');
+    Route::get('ledger/report/{id}', 'LedgerController@report')->name('ledger.report');
 
 
     // neraca
     Route::resource('trialbalance', 'TrialBalanceController');
     Route::get('trialbalancedata', 'TrialBalanceController@trialbalancedata')->name('trialbalance.trialbalancedata');
-    Route::get('trialbalance/report/{id}','TrialBalanceController@report')->name('trialbalance.report');
+    Route::get('trialbalance/report/{id}', 'TrialBalanceController@report')->name('trialbalance.report');
 
     Route::resource('incomestatement', 'IncomeStatementController');
     Route::get('incomestatementdata', 'IncomeStatementController@incomestatementdata')->name('incomestatement.incomestatementdata');
-    Route::get('incomestatement/report/{id}','IncomeStatementController@report')->name('incomestatement.report');
-
+    Route::get('incomestatement/report/{id}', 'IncomeStatementController@report')->name('incomestatement.report');
 });
 
-// cashier
+// cashier or employeess
 
 Route::group(['prefix' => 'cashier', 'as' => 'cashier.', 'namespace' => 'Cashier', 'middleware' => ['auth']], function () {
     // Route::resource('transaction', 'TransactionController');

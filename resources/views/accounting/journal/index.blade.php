@@ -6,8 +6,8 @@
         <div class="breadcrumb-title pe-3 border-right-0">@lang('global.journal.journal')</div>
         <div class="ms-auto">
             <div class="btn-group">
-                @can('isAccounting')
-                <a href="{{ route('accounting.journal.create') }}" class="text-white btn btn-primary ">@lang('global.app.add')</a>
+                @can('isEmployes')
+                    <a href="{{ route('accounting.journal.create') }}" class="text-white btn btn-primary ">@lang('global.app.add')</a>
                 @endcan
             </div>
         </div>
@@ -38,20 +38,39 @@
 
 @section('script')
     <script type="text/javascript">
-        $(function () {
+        $(function() {
 
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('accounting.journal.journaldata') }}",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'register', name: 'register'},
-                    {data: 'title', name: 'title'},
-                    {data: 'note', name: 'note'},
-                    {data: 'status', name: 'status'},
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'register',
+                        name: 'register'
+                    },
+                    {
+                        data: 'title',
+                        name: 'title'
+                    },
+                    {
+                        data: 'note',
+                        name: 'note'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
                     // {data : 'details', name : 'details'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
                 ]
             });
 
@@ -60,7 +79,7 @@
         // $('#delete').on( 'draw.dt', function () {
         //     alert( 'Table redrawn' );
         // } );
-        const removeItem =(id) => {
+        const removeItem = (id) => {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -68,36 +87,36 @@
             });
 
             swal({
-                title: "Are you sure?",
-                text: "File yang di Hapus tidak bisa di kembalikan !",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
+                    title: "Are you sure?",
+                    text: "File yang di Hapus tidak bisa di kembalikan !",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
                 })
                 .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url:' {{ url("/accounting/journal")}}/' + id,
-                        type:'delete',
-                        data:'_token = <?php echo csrf_token() ?>',
-                        success:function(data) {
-                            //   $("#msg").html(data.msg);
-                            // console.log(data);
-                            $('.data-table').DataTable().ajax.reload();
-                            swal("Delete Success", {
-                                icon: "success",
-                            });
-                        },
-                        error: function(err) {
-                            swal("Delete Error!", {
-                                icon: "error",
-                            });
-                            console.log(err);
-                        }
+                    if (willDelete) {
+                        $.ajax({
+                            url: ' {{ url('/accounting/journal') }}/' + id,
+                            type: 'delete',
+                            data: '_token = <?php echo csrf_token(); ?>',
+                            success: function(data) {
+                                //   $("#msg").html(data.msg);
+                                // console.log(data);
+                                $('.data-table').DataTable().ajax.reload();
+                                swal("Delete Success", {
+                                    icon: "success",
+                                });
+                            },
+                            error: function(err) {
+                                swal("Delete Error!", {
+                                    icon: "error",
+                                });
+                                console.log(err);
+                            }
 
-                    });
-                }
-            });
+                        });
+                    }
+                });
         }
     </script>
 @endsection

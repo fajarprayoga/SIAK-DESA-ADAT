@@ -7,7 +7,7 @@
         <div class="breadcrumb-title pe-3 border-right-0">@lang('global.journal.journal')</div>
         <div class="ms-auto">
             <div class="btn-group">
-                @can('isAccounting')
+                @can('isEmployes')
                     <a href="{{ route('accounting.accounts.create') }}" class="text-white btn btn-primary ">@lang('global.app.add')</a>
                 @endcan
             </div>
@@ -37,18 +37,34 @@
 
 @section('script')
     <script type="text/javascript">
-        $(function () {
+        $(function() {
 
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('accounting.accounts.accountdata') }}",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'code', name: 'code'},
-                    {data: 'name', name: 'name'},
-                    {data : 'normal_balance', name: 'normal_balance'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'code',
+                        name: 'code'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'normal_balance',
+                        name: 'normal_balance'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
                 ]
             });
 
@@ -57,44 +73,42 @@
         // $('#delete').on( 'draw.dt', function () {
         //     alert( 'Table redrawn' );
         // } );
-        const removeItem =(id) => {
+        const removeItem = (id) => {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
             swal({
-                title: "Are you sure?",
-                text: "File yang di Hapus tidak bisa di kembalikan !",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
+                    title: "Are you sure?",
+                    text: "File yang di Hapus tidak bisa di kembalikan !",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
                 })
                 .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url:' {{ url("/accounting/accounts")}}/' + id,
-                        type:'delete',
-                        data:'_token = <?php echo csrf_token() ?>',
-                        success:function(data) {
-                            //   $("#msg").html(data.msg);
-                            // console.log(data);
-                            $('.data-table').DataTable().ajax.reload();
-                            // alert(data);
-                            swal("Delete Success", {
-                                icon: "success",
-                            });
-                        },
-                        error: function(err) {
-                            swal("Delete Error!", {
-                                icon: "error",
-                            });
-                        }
-                    });
-                }
-            });
+                    if (willDelete) {
+                        $.ajax({
+                            url: ' {{ url('/accounting/accounts') }}/' + id,
+                            type: 'delete',
+                            data: '_token = <?php echo csrf_token(); ?>',
+                            success: function(data) {
+                                //   $("#msg").html(data.msg);
+                                // console.log(data);
+                                $('.data-table').DataTable().ajax.reload();
+                                // alert(data);
+                                swal("Delete Success", {
+                                    icon: "success",
+                                });
+                            },
+                            error: function(err) {
+                                swal("Delete Error!", {
+                                    icon: "error",
+                                });
+                            }
+                        });
+                    }
+                });
         }
-
-
     </script>
 @endsection

@@ -4,7 +4,7 @@
             <img src="{{ asset('assets/images/logo-icon.png') }}" class="logo-icon" alt="logo icon">
         </div>
         <div>
-            <h4 class="logo-text">@lang("global.app.title")</h4>
+            <h4 class="logo-text">@lang('global.app.title')</h4>
         </div>
         <div class="toggle-icon ms-auto"> <i class="bi bi-list"></i></div>
     </div>
@@ -29,20 +29,22 @@
                     <div class="menu-title">@lang('global.sidebar.master')</div>
                 </a>
                 <ul>
-                    @can('isAccounting')
+                    @can('isEmployes')
                         <li>
-                            <a href="{{ route('accounting.accounts.index') }}"><i class="bi bi-circle {{ request()->is('accounting/accounts/*') ? 'mm-active' : '' }}"></i>@lang('global.account.title')</a>
+                            <a href="{{ route('accounting.accounts.index') }}"><i
+                                    class="bi bi-circle {{ request()->is('accounting/accounts/*') ? 'mm-active' : '' }}"></i>@lang('global.account.title')</a>
                         </li>
                     @endcan
-                    @can('isCashier')
+                    @can('isEmployes')
                         <li>
-                            <a href="{{ route('cashier.material.index') }}"><i class="bi bi-circle {{ request()->is('cahsier/material/*') ? 'mm-active' : '' }}"></i>@lang('global.material.title')</a>
+                            <a href="{{ route('cashier.material.index') }}"><i
+                                    class="bi bi-circle {{ request()->is('cahsier/material/*') ? 'mm-active' : '' }}"></i>@lang('global.material.title')</a>
                         </li>
                     @endcan
                 </ul>
             </li>
         @endif
-        @if (!Auth::user()->can('isCashier'))
+        @if (Auth::user()->can('isEmployes') || Auth::user()->can('isManager'))
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="lni lni-book"></i></div>
@@ -63,13 +65,15 @@
                     </li>
                     <li>
                         <a href="{{ route('accounting.trialbalance.index') }}">
-                            <i class="bi bi-circle {{ request()->is('accounting/trialbalance/*') ? 'mm-active' : '' }}"></i>
+                            <i
+                                class="bi bi-circle {{ request()->is('accounting/trialbalance/*') ? 'mm-active' : '' }}"></i>
                             @lang('global.trialbalance.trialbalance')
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('accounting.incomestatement.index') }}">
-                            <i class="bi bi-circle {{ request()->is('accounting/incomestatement/*') ? 'mm-active' : '' }}"></i>
+                            <i
+                                class="bi bi-circle {{ request()->is('accounting/incomestatement/*') ? 'mm-active' : '' }}"></i>
                             @lang('global.incomestatement.incomestatement')
                         </a>
                     </li>
@@ -77,7 +81,8 @@
             </li>
         @endif
         <li>
-            <a href="{{ route('admin.auth.logout') }}"  onclick="event.preventDefault();
+            <a href="{{ route('admin.auth.logout') }}"
+                onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
                 <div class="parent-icon"><i class="bx bx-log-out"></i></i></div>
                 <div class="menu-title">@lang('global.app.logout')</div>
@@ -88,4 +93,4 @@
         </li>
     </ul>
     <!--end navigation-->
- </aside>
+</aside>

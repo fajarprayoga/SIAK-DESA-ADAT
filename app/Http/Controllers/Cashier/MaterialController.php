@@ -14,23 +14,22 @@ class MaterialController extends Controller
     public function materialdata(Request $request)
     {
         if ($request->ajax()) {
-            $data = Material::where('is_delete' ,'!=', 1 )->latest()->get();
+            $data = Material::where('is_delete', '!=', 1)->latest()->get();
             return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
 
-                        $btn = '';
-                        if(Auth::user()->can('isCashier')){
-                            $btn = ' <a href="' .route('cashier.material.edit', $row->id). '" class=" btn btn-info btn-sm my-1">Edit</a>';
-                            // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
-                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
-                        }
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+                    $btn = '';
+                    if (Auth::user()->can('isEmployes')) {
+                        $btn = ' <a href="' . route('cashier.material.edit', $row->id) . '" class=" btn btn-info btn-sm my-1">Edit</a>';
+                        // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
+                        $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' . $row->id . ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
+                    }
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
-
     }
 
     public function index()
@@ -77,7 +76,7 @@ class MaterialController extends Controller
 
     public function destroy(Material $material)
     {
-        $material->is_delete=1;
+        $material->is_delete = 1;
         $material->save();
         return 'Item Berhasil Di Hapus';
     }

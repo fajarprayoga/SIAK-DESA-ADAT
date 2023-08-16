@@ -16,23 +16,22 @@ class AccountController extends Controller
     {
         if ($request->ajax()) {
 
-            $data = Account::where('is_delete' ,'!=', 1 )->latest()->get();
+            $data = Account::where('is_delete', '!=', 1)->latest()->get();
             return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                        if(Auth::user()->can('isAccounting')){
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    if (Auth::user()->can('isEmployes')) {
 
-                            $btn = ' <a href="' .route('accounting.accounts.edit', $row->id). '" class=" btn btn-info btn-sm my-1">Edit</a>';
-                            // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
-                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
-                            return $btn;
-                        }
-                        return ;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+                        $btn = ' <a href="' . route('accounting.accounts.edit', $row->id) . '" class=" btn btn-info btn-sm my-1">Edit</a>';
+                        // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
+                        $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' . $row->id . ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
+                        return $btn;
+                    }
+                    return;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
-
     }
     public function index()
     {
@@ -106,7 +105,7 @@ class AccountController extends Controller
     public function destroy(Account $account)
     {
         // $account->delete();
-        $account->is_delete=1;
+        $account->is_delete = 1;
         $account->save();
         return 'Item Berhasil Di Hapus';
     }
