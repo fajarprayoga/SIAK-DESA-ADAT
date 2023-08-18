@@ -2,7 +2,7 @@
 
 @section('content')
     {{-- <h1>@lang('global.journal.journal')</h1> --}}
-    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="page-breadcrumb  d-sm-flex align-items-center mb-3">
         <div class="breadcrumb-title pe-3 border-right-0">@lang('global.transaction.transaction')</div>
         <div class="ms-auto">
             <div class="btn-group">
@@ -12,6 +12,8 @@
             </div>
         </div>
     </div>
+
+
     {{-- <a href="{{ route('admin.journal.create') }}" class="btn btn-success btn-md my-1">@lang('global.app.add') @lang('global.journal.title')</a> --}}
     <div class="card">
         <div class="card-body">
