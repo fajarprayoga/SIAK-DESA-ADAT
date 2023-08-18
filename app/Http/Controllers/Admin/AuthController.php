@@ -32,15 +32,15 @@ class AuthController extends Controller
                     // Authentication passed...
                     return redirect()->intended('/admin');
                 }else{
-                    Session::flash('password_wrong','Your Email or Password is Incorrect, Please Try Again!');
+                    Session::flash('password_wrong','Username atau password yang anda masukan salah, Silahkan coba lagi!');
                     return redirect()->back();
                 }
             }else{
-                Session::flash('password_wrong','Your Email or Password is Incorrect, Please Try Again!');
+                Session::flash('password_wrong','Username atau password yang anda masukan salah, Silahkan coba lagi!');
                 return redirect()->back();
             }
         } catch (\Throwable $th) {
-            Session::flash('password_wrong','Your Email or Password is Incorrect, Please Try Again!');
+            Session::flash('password_wrong','Username atau password yang anda masukan salah, Silahkan coba lagi!');
             return redirect()->back();
         }
     }
