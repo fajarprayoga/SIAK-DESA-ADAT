@@ -196,9 +196,8 @@ class IncomeStatementController extends Controller
             ->first();
 
         // dd($total);
-        $incomestatement = Incomestatement::findOrFail($id);
-
-        $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total]);
-        return $pdf->stream();
+        $incomestatement = Incomestatement::with('incomestatement_detail')->findOrFail($id);
+        // $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total]);
+        // return $pdf->stream();
     }
 }
