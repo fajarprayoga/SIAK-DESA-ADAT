@@ -4,18 +4,20 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class IncomeStatement extends Model
+class LedgerDetail extends Model
 {
-    protected $table = 'income_statement'; // Menggunakan huruf kecil dan garis bawah alih-alih camel case
+    protected $table = 'ledger_details';
     protected $fillable = [
-        'register',
-        'title',
-        'status',
-        'note'
+        'date',
+        'ledger_id',
+        'account_id',
+        'types',
+        'amount',
+        'description'
     ];
 
-    public function incomeStatementDetail() // Menggunakan gaya camel case untuk nama metode
+    public function account()
     {
-        return $this->hasMany(Incomestatement_detail::class, 'income_statement_id', 'id'); // Gunakan ::class untuk namespace
+        return $this->belongsTo('App\Account',  'account_id');
     }
 }

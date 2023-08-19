@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Incomestatement extends Model
+class IncomeStatement extends Model
 {
-    protected $table = 'incomestatement';
+    protected $table = 'income_statement'; // Menggunakan huruf kecil dan garis bawah alih-alih camel case
     protected $fillable = [
         'register',
         'title',
@@ -14,8 +14,8 @@ class Incomestatement extends Model
         'note'
     ];
 
-    public function incomestatement_detail()
+    public function incomeStatementDetail() // Menggunakan gaya camel case untuk nama metode
     {
-        return $this->hasMany('App\incomestatement_detail',  'incomestatement_id', 'id');
+        return $this->hasMany(Incomestatement_detail::class, 'income_statement_id', 'id'); // Gunakan ::class untuk namespace
     }
 }
