@@ -140,7 +140,7 @@ class IncomeStatementController extends Controller
             return redirect()->route('accounting.incomestatement.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
+            // dd($th);
             return redirect()->back();
         }
     }
@@ -190,15 +190,21 @@ class IncomeStatementController extends Controller
     public function report($id)
     {
 
-        $total = Incomestatement::selectRaw('sum(incomestatement_detail.amount) as amount_total, sum(incomestatement_detail.expense) as expense_total')
-            ->where('incomestatement.id', $id)
-            ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')
-            ->first();
+        try {
+            //code...
+            $total = Incomestatement::selectRaw('sum(incomestatement_detail.amount) as amount_total, sum(incomestatement_detail.expense) as expense_total')
+                ->where('incomestatement.id', $id)
+                ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')
+                ->first();
 
-        // dd($total);
-        $incomestatement = Incomestatement::with('incomestatement_detail')->findOrFail($id);
-        dd('halo');
-        // $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total]);
-        // return $pdf->stream();
+            // dd($total);
+            $incomestatement = Incomestatement::with('incomestatement_detail')->findOrFail($id);
+
+            dd($incomestatement);
+            $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total]);
+            return $pdf->stream();
+        } catch (\Throwable $th) {
+            dd($th->getTraceAsString());
+        }
     }
 }
