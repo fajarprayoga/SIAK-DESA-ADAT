@@ -15,7 +15,13 @@ class Transaction extends Model
         'price_material',
         'nomor',
         'status',
-        'is_delete'
+        'is_delete',
+
+        // new db
+        'cost_of_goods',
+        'quantity',
+        'discount',
+        'total'
     ];
 
     public function material()

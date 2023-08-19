@@ -13,10 +13,11 @@ use DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
+
 class TransactionController extends Controller
 {
 
-    public $type_expense = ['operator','kasir','helper','jalan 40', 'pemilik','jalan desa', 'lain-lain', 'solar'];
+    public $type_expense = ['operator', 'kasir', 'helper', 'jalan 40', 'pemilik', 'jalan desa', 'lain-lain', 'solar'];
     public function transactiondata(Request $request)
     {
         if ($request->ajax()) {
@@ -24,37 +25,42 @@ class TransactionController extends Controller
             $daten = date('Y-m-d', strtotime($request->date));
             $data = Transaction::where('created_at', $daten)->where([['expense', '<=', 0], ['price_material', '!=', null]])->orWhere('expense', null)->orderBy('id', 'DESC')->with(['material', 'gosek'])->get();
             return Datatables::of($data)
-                    ->editColumn('vehicle_number', function ($row) {
-                        return $row->status ==1 ? "<span style='color:blue'; font-weight:bold; font-size:20px > * </span>" . $row->vehicle_number : $row->vehicle_number;
-                    })
-                    ->editColumn('material_id', function ($row) {
-                        return $row->material ? $row->material->name : "";
-                    })
-                    ->editColumn('price_material', function ($row) {
-                        return Rupiah($row->price_material);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('gosek', function($row){
-                        return $row->gosek ? Rupiah($row->gosek->expense) : '';
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '';
-                        if(Auth::user()->can('isCashier')){
-                            if($row->is_delete != 1){
-                                $btn = ' <a href="' .route('cashier.transaction.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
-                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
-                            }else{
-                                $btn.= '<span class="badge badge-danger" style="color:white">Terhapus</span>';
-                            }
+                ->editColumn('material_id', function ($row) {
+                    return $row->material ? $row->material->name : "";
+                })
+                ->editColumn('price_material', function ($row) {
+                    return Rupiah($row->price_material);
+                })
+                ->editColumn('cost_of_goods', function ($row) {
+                    return Rupiah($row->cost_of_goods);
+                })
+                ->editColumn('discount', function ($row) {
+                    return ($row->discount) . '%';
+                })
+                ->editColumn('total', function ($row) {
+                    return Rupiah($row->total);
+                })
+                ->addIndexColumn()
+                // ->addColumn('gosek', function ($row) {
+                //     return $row->gosek ? Rupiah($row->gosek->expense) : '';
+                // })
+                ->addColumn('action', function ($row) {
+                    $btn = '';
+                    if (Auth::user()->can('isEmployes')) {
+                        if ($row->is_delete != 1) {
+                            $btn = ' <a href="' . route('cashier.transaction.edit', $row->id) . '" class=" btn btn-primary btn-sm my-1">Edit</a>';
+                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' . $row->id . ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
+                        } else {
+                            $btn .= '<span class="badge badge-danger" style="color:white">Terhapus</span>';
                         }
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'vehicle_number'])
-                    ->make(true);
+                    }
+                    return $btn;
+                })
+                ->rawColumns(['action', 'vehicle_number'])
+                ->make(true);
             // return $request->date;
 
         }
-
     }
 
     /**
@@ -64,7 +70,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::where([['price_material', '!=', null ], ['is_delete', '=', '0']])->orderBy('created_at', 'DESC')->get()->groupBy(function($data) {
+        $transactions = Transaction::where([['price_material', '!=', null], ['is_delete', '=', '0']])->orderBy('created_at', 'DESC')->get()->groupBy(function ($data) {
             return $data->created_at->format('d-m-Y');
         });
         return view('cashier.transaction.index', compact('transactions'));
@@ -81,7 +87,7 @@ class TransactionController extends Controller
     public function create(Request $request)
     {
         $materials = Material::where('is_delete', 0)->get();
-        $date=$request->date;
+        $date = $request->date;
         return view('cashier.transaction.create', compact('date', 'materials'));
     }
 
@@ -102,54 +108,55 @@ class TransactionController extends Controller
             // dd($request->date);
 
             $data = array(
-                'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
-                'vehicle_number' => $request->vehicle_number,
-                'vehicle' => $request->vehicle,
-                'type_material' => $request->type_material,
+                'nomor' => $transaction_nomor,
                 'material_id' => $request->material_id,
-                'price_material' => $request->price_material ? str_replace(".","",  $request->price_material)  : 0,
-                'nomor' => $transaction_nomor
+                'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
+                'name' => $request->name_property,
+                'discount' => $request->discount,
+                'quantity' => $request->quantity,
+                'price_material' => $request->price_material ? str_replace(".", "",  $request->price_material)  : 0,
+                'cost_of_goods' => $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods)  : 0,
+                'total' => ($request->price_material * $request->quantity) * ($request->discount / 100)
             );
 
             $transaction = Transaction::create($data);
 
-            if($request->gosek != null || $request->gosek != ''){
+            if ($request->gosek != null || $request->gosek != '') {
                 $expense = array(
                     'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
-                    'expense' =>  $request->gosek  ? str_replace(".","",  $request->gosek)  : 0,
+                    'expense' =>  $request->gosek  ? str_replace(".", "",  $request->gosek)  : 0,
                     'transaction_id' => $transaction->id
                 );
-                  // create gosek
+                // create gosek
                 Gosek::create($expense);
             }
 
-               // penjualan total - gosek * 25%
+            // penjualan total - gosek * 25%
 
-            $pemilik = Transaction::where('created_at',date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik' )->first();
+            $pemilik = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik')->first();
             $sum = 0;
-            if(!is_null($pemilik)){
-                $t_transaction = Transaction::where('created_at',date('Y-m-d', strtotime($request->date)))->where('expense', 0)->get();
+            if (!is_null($pemilik)) {
+                $t_transaction = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('expense', 0)->get();
                 $t_transaction = json_decode($t_transaction, true);
-                $sum_transaction = array_sum(array_map(function($var) {
+                $sum_transaction = array_sum(array_map(function ($var) {
                     return $var['price_material'];
                 }, $t_transaction));
 
 
 
-                            // // get trasaksi gosek
+                // // get trasaksi gosek
                 $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
                 $t_gosek = json_decode($t_gosek, true);
-                if(!is_null(($t_gosek))){
-                    $sum_gosek = array_sum(array_map(function($var) {
+                if (!is_null(($t_gosek))) {
+                    $sum_gosek = array_sum(array_map(function ($var) {
                         return $var['expense'];
                     }, $t_gosek));
-
                 }
 
-                $sum = ($sum_transaction - $sum_gosek) *( 25/100);
+                $sum = ($sum_transaction - $sum_gosek) * (25 / 100);
                 // $pemilik->update(['expense' => $sum]);
-                Transaction::where('created_at',date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik' )
-                            ->update(['expense' => $sum]);
+                Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik')
+                    ->update(['expense' => $sum]);
             }
 
 
@@ -157,7 +164,7 @@ class TransactionController extends Controller
             return redirect()->route('cashier.transaction.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
+            // dd($th);
             return redirect()->back();
         }
 
@@ -212,51 +219,49 @@ class TransactionController extends Controller
     {
         // return view('cashier.transaction.expense', compact('date'));
         // dd($request->all());
-        $type_expense = ['operator','kasir','helper','jalan 40', 'pemilik','jalan desa', 'lain-lain', 'solar'];
-        $sum_transaction =0;
+        $type_expense = ['operator', 'kasir', 'helper', 'jalan 40', 'pemilik', 'jalan desa', 'lain-lain', 'solar'];
+        $sum_transaction = 0;
         $sum_gosek = 0;
         // pemilik rumusa
         // penjualan total - gosek * 25%
-        $t_transaction = Transaction::where('created_at',date('Y-m-d', strtotime($request->date)))->where('expense', 0)->where('status', '!=', 1)->get();
+        $t_transaction = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('expense', 0)->where('status', '!=', 1)->get();
         $t_transaction = json_decode($t_transaction, true);
-        $sum_transaction = array_sum(array_map(function($var) {
+        $sum_transaction = array_sum(array_map(function ($var) {
             return $var['price_material'];
         }, $t_transaction));
 
 
 
-                    // // get trasaksi gosek
+        // // get trasaksi gosek
         $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
         $t_gosek = json_decode($t_gosek, true);
-        if(!is_null(($t_gosek))){
-            $sum_gosek = array_sum(array_map(function($var) {
+        if (!is_null(($t_gosek))) {
+            $sum_gosek = array_sum(array_map(function ($var) {
                 return $var['expense'];
             }, $t_gosek));
-
-
         }
 
-        $sum = ($sum_transaction - $sum_gosek) *( 25/100);
+        $sum = ($sum_transaction - $sum_gosek) * (25 / 100);
 
         foreach ($type_expense as $key => $value) {
             $data[$key] = [
                 'vehicle_number' => $value,
-                'expense' => $key == 4 ?( $sum  ? str_replace(".","",  $sum)  : 0 ) : ($request->expense[$key]  ? str_replace(".","",   $request->expense[$key])  : 0),
+                'expense' => $key == 4 ? ($sum  ? str_replace(".", "",  $sum)  : 0) : ($request->expense[$key]  ? str_replace(".", "",   $request->expense[$key])  : 0),
                 'created_at' => date('Y-m-d', strtotime($request->date))
             ];
         }
 
         // dd($sum_gosek);
 
-        $row = Transaction::where('created_at', date('Y-m-d', strtotime($request->date) ))
-                                    ->where( function($query) {
-                                        $query->whereIn('vehicle_number', $this->type_expense);
-                                    });
+        $row = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))
+            ->where(function ($query) {
+                $query->whereIn('vehicle_number', $this->type_expense);
+            });
 
-        if($row->count() != 8){
+        if ($row->count() != 8) {
             Transaction::insert($data);
-        }else{
-        //    $row->update($data);
+        } else {
+            //    $row->update($data);
             $row->delete();
             $row->insert($data);
         }
@@ -265,7 +270,7 @@ class TransactionController extends Controller
     }
     public function edit($id)
     {
-        $materials = Material::all();
+        $materials = Material::where('is_delete', 0)->get();
         $transaction = Transaction::with('gosek')->findOrFail($id);
         return view('cashier.transaction.edit', compact('transaction', 'materials'));
     }
@@ -286,61 +291,58 @@ class TransactionController extends Controller
 
             $data = array(
                 'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
-                'vehicle_number' => $request->vehicle_number,
-                'vehicle' => $request->vehicle,
-                'type_material' => $request->type_material,
                 'material_id' => $request->material_id,
-                'price_material' =>  $request->price_material ? str_replace(".","",  $request->price_material)  : 0,
-                'nomor' => $request->nomor,
-                'status' => 1
+                'price_material' =>  $request->price_material ? str_replace(".", "",  $request->price_material)  : 0,
+                'status' => 1,
+                'discount' => $request->discount,
+                'quantity' => $request->quantity,
+                'cost_of_goods' => $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods)  : 0,
+                'total' => ($request->price_material * $request->quantity) * ($request->discount / 100)
             );
 
             $transaction->update($data);
 
-            if($request->gosek != null || $request->gosek != ''){
-                $expense = array(
-                    'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
-                    'expense' =>   $request->gosek  ? str_replace(".","",  $request->gosek)  : 0,
-                    'transaction_id' => $transaction->id
-                );
+            // if ($request->gosek != null || $request->gosek != '') {
+            //     $expense = array(
+            //         'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
+            //         'expense' =>   $request->gosek  ? str_replace(".", "",  $request->gosek)  : 0,
+            //         'transaction_id' => $transaction->id
+            //     );
 
-                $gosek = Gosek::where('transaction_id',$transaction->id)->first();
+            //     $gosek = Gosek::where('transaction_id', $transaction->id)->first();
 
-                if (!is_null($gosek)) {
-                    $gosek->update($expense);
-                }else{
-                    Gosek::create($expense);
-                }
-            }
+            //     if (!is_null($gosek)) {
+            //         $gosek->update($expense);
+            //     } else {
+            //         Gosek::create($expense);
+            //     }
+            // }
 
-            $pemilik = Transaction::where('created_at',date('Y-m-d'. strtotime($request->date)))->where('vehicle_number', 'pemilik' )->first();
-            $sum = 0;
-            if(!is_null($pemilik)){
-                $t_transaction = Transaction::where('created_at',date('Y-m-d'. strtotime($request->date)))->where('expense', 0)->get();
-                $t_transaction = json_decode($t_transaction, true);
-                $sum_transaction = array_sum(array_map(function($var) {
-                    return $var['price_material'];
-                }, $t_transaction));
-
-
-
-                            // // get trasaksi gosek
-                $t_gosek = Gosek::where('created_at', date('Y-m-d'. strtotime($request->date)))->get();
-                $t_gosek = json_decode($t_gosek, true);
-                if(!is_null(($t_gosek))){
-                    $sum_gosek = array_sum(array_map(function($var) {
-                        return $var['expense'];
-                    }, $t_gosek));
-
-                }
-
-                $sum = ($sum_transaction - $sum_gosek) *( 25/100);
-                // $pemilik->update(['expense' => $sum]);
-                Transaction::where('created_at',date('Y-m-d'. strtotime($request->date)))->where('vehicle_number', 'pemilik' )
-                            ->update(['expense' => $sum]);
+            // $pemilik = Transaction::where('created_at', date('Y-m-d' . strtotime($request->date)))->where('vehicle_number', 'pemilik')->first();
+            // $sum = 0;
+            // if (!is_null($pemilik)) {
+            //     $t_transaction = Transaction::where('created_at', date('Y-m-d' . strtotime($request->date)))->where('expense', 0)->get();
+            //     $t_transaction = json_decode($t_transaction, true);
+            //     $sum_transaction = array_sum(array_map(function ($var) {
+            //         return $var['price_material'];
+            //     }, $t_transaction));
 
 
-            }
+
+            //     // // get trasaksi gosek
+            //     $t_gosek = Gosek::where('created_at', date('Y-m-d' . strtotime($request->date)))->get();
+            //     $t_gosek = json_decode($t_gosek, true);
+            //     if (!is_null(($t_gosek))) {
+            //         $sum_gosek = array_sum(array_map(function ($var) {
+            //             return $var['expense'];
+            //         }, $t_gosek));
+            //     }
+
+            //     $sum = ($sum_transaction - $sum_gosek) * (25 / 100);
+            //     // $pemilik->update(['expense' => $sum]);
+            //     Transaction::where('created_at', date('Y-m-d' . strtotime($request->date)))->where('vehicle_number', 'pemilik')
+            //         ->update(['expense' => $sum]);
+            // }
             // dd($sum);
             // dd($sum_gosek);
 
@@ -363,7 +365,7 @@ class TransactionController extends Controller
     public function destroy($id)
     {
         DB::beginTransaction();
-        try{
+        try {
             $transaction = Transaction::findOrFail($id);
             $transaction->update([
                 'is_delete' => 1
@@ -373,7 +375,6 @@ class TransactionController extends Controller
             // dd($th);
             DB::rollBack();
         }
-
     }
 
 
@@ -381,8 +382,8 @@ class TransactionController extends Controller
     {
         // dd($request->all());
         $date = date('Y-m-d', strtotime($request->date));
-        $transactions = Transaction::where('created_at', $date)->where([['expense', '<=', 0], ['price_material', '!=', null], ['status','=' , 0]])->get();
-        $transactions_expense = Transaction::where('created_at', $date)->where(function ($query){
+        $transactions = Transaction::where('created_at', $date)->where([['expense', '<=', 0], ['price_material', '!=', null], ['status', '=', 0]])->get();
+        $transactions_expense = Transaction::where('created_at', $date)->where(function ($query) {
             $query->where('price_material', '0');
             $query->orWhere('price_material', '=', null);
         })->get();
@@ -391,22 +392,22 @@ class TransactionController extends Controller
         $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
         $t_gosek = json_decode($t_gosek, true);
 
-        $sum = array_sum(array_map(function($var) {
+        $sum = array_sum(array_map(function ($var) {
             return $var['price_material'];
         }, json_decode($transactions, true)));
 
-        $sum_expense = array_sum(array_map(function($var) {
+        $sum_expense = array_sum(array_map(function ($var) {
             return $var['expense'];
-        },json_decode( $transactions_expense, true)));
+        }, json_decode($transactions_expense, true)));
 
 
-        $sum_gosek=0;
-        if(!is_null(($t_gosek))){
-            $sum_gosek = array_sum(array_map(function($var) {
+        $sum_gosek = 0;
+        if (!is_null(($t_gosek))) {
+            $sum_gosek = array_sum(array_map(function ($var) {
                 return $var['expense'];
             }, $t_gosek));
 
-            $sum_expense+=$sum_gosek;
+            $sum_expense += $sum_gosek;
         }
 
 
@@ -424,7 +425,7 @@ class TransactionController extends Controller
     public function getLastCode()
     {
         $transaction = Transaction::orderBy('id', 'desc')
-        ->first();
+            ->first();
         if ($transaction && (strlen($transaction->nomor) == 8)) {
             $nomor = $transaction->nomor;
         } else {

@@ -32,23 +32,23 @@
                                             value="{{ $date ? $date : date('d-m-Y') }}" name="date" required>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="vehicle_number" class="form-label">@lang('global.transaction.vehicle_number')</label>
-                                        <input class="form-control" type="text" id="vehicle_number" name="vehicle_number"
+                                        <label for="code_property" class="form-label">@lang('global.transaction.code_property')</label>
+                                        <input class="form-control" type="text" id="code_property" name="code_property"
                                             required>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
+                                </div> --}}
+                                {{-- <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="vehicle" class="form-label">@lang('global.transaction.vehicle')</label>
                                         <input class="form-control" type="text" id="vehicle" name="vehicle" required>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="material_id" class="form-label">@lang('global.transaction.type_material')</label>
-                                        <select name="material_id" id="type_material" class="form-control">
+                                        <label for="material_id" class="form-label">@lang('global.transaction.name_property')</label>
+                                        <select name="material_id" id="material_id" class="form-control">
                                             <option value="">---</option>
                                             {{-- <option value="Cor">Cor</option>
                                         <option value="Super">Super</option> --}}
@@ -60,21 +60,28 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
+                                        <label for="cost_of_goods" class="form-label">@lang('global.transaction.cost_of_goods')</label>
+                                        <input class="form-control price" type="text" id="cost_of_goods"
+                                            name="cost_of_goods" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
                                         <label for="price_material" class="form-label">@lang('global.transaction.price_material')</label>
                                         <input class="form-control price" type="text" id="price_material"
                                             name="price_material" required>
                                     </div>
                                 </div>
-                                {{-- <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="nomor" class="form-label">@lang('global.transaction.nomor')</label> --}}
-                                <input class="form-control" type="hidden" id="nomor" name="nomor">
-                                {{-- </div>
-                            </div> --}}
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="gosek" class="form-label">@lang('global.transaction.gosek')</label>
-                                        <input class="form-control price" type="text" id="gosek" name="gosek">
+                                        <label for="quantity" class="form-label">@lang('global.transaction.quantity')</label>
+                                        <input class="form-control price" type="number" id="quantity" name="quantity">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="discount" class="form-label">@lang('global.transaction.discount')</label>
+                                        <input class="form-control price" type="number" id="discount" name="discount">
                                     </div>
                                 </div>
                             </div>
