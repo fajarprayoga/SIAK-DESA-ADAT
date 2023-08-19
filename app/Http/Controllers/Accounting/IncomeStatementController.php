@@ -140,7 +140,7 @@ class IncomeStatementController extends Controller
             return redirect()->route('accounting.incomestatement.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
+            // dd($th);
             return redirect()->back();
         }
     }

@@ -25,35 +25,34 @@ class JournalController extends Controller
             $data = Journal::latest()->get();
 
             return Datatables::of($data)
-                    ->editColumn('status', function($row) {
-                        if($row->status == 'pending'){
-                            $class = 'bg-warning';
-                        }else if($row->status == 'approved'){
-                            $class = 'bg-primary';
-                        }else{
-                            $class = 'bg-danger';
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'pending') {
+                        $class = 'bg-warning';
+                    } else if ($row->status == 'approved') {
+                        $class = 'bg-primary';
+                    } else {
+                        $class = 'bg-danger';
+                    }
+                    return '<span class="badge ' . $class . '"> ' . $row->status . '</span>';
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '';
+                    if (Auth::user()->can('isAccounting')) {
+                        if ($row->status != 'approved') {
+                            $btn = ' <a href="' . route('accounting.journal.edit', $row->id) . '" class=" btn btn-primary btn-sm my-1">Edit</a>';
+                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' . $row->id . ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
                         }
-                        return '<span class="badge '.$class.'"> '. $row->status .'</span>';
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                        $btn='';
-                        if(Auth::user()->can('isAccounting')){
-                            if($row->status !='approved'){
-                                $btn = ' <a href="' .route('accounting.journal.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
-                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
-                            }
-                            // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
-                        }
-                        if(!Auth::user()->can('isCashier')){
-                            $btn .= ' <a href="' .route('accounting.journal.show', $row->id). '" class=" btn btn-info btn-sm my-1">View</a>';
-                        }
-                        return $btn;
-                    })
-                    ->rawColumns(['details','action', 'status'])
-                    ->make(true);
+                        // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
+                    }
+                    if (!Auth::user()->can('isCashier')) {
+                        $btn .= ' <a href="' . route('accounting.journal.show', $row->id) . '" class=" btn btn-info btn-sm my-1">View</a>';
+                    }
+                    return $btn;
+                })
+                ->rawColumns(['details', 'action', 'status'])
+                ->make(true);
         }
-
     }
 
     public function index()
@@ -73,21 +72,21 @@ class JournalController extends Controller
 
         try {
             $date = (new DateTime($request->register))->format('Y-m-d');
-            $data=[
+            $data = [
                 'register' =>  $date,
                 'title' => $request->title,
                 'description' => $request->description
             ];
             $journal = Journal::create($data);
-            $journal_details_data=[];
-            for($i = 0; $i< count($request->accounts); $i++){
+            $journal_details_data = [];
+            for ($i = 0; $i < count($request->accounts); $i++) {
                 $journal_details_data[$i] = [
 
-                        'journal_id' => $journal->id,
-                        'account_id' => $request->accounts[$i],
-                        'types' => $request->types[$i],
-                        'amount' => $request->amount[$i] ?  str_replace(".","",  $request->amount[$i])  : 0,
-                        'description' => $request->description_journal_detail[$i]
+                    'journal_id' => $journal->id,
+                    'account_id' => $request->accounts[$i],
+                    'types' => $request->types[$i],
+                    'amount' => $request->amount[$i] ?  str_replace(".", "",  $request->amount[$i])  : 0,
+                    'description' => $request->description_journal_detail[$i]
 
                 ];
             }
@@ -98,11 +97,9 @@ class JournalController extends Controller
             return redirect()->route('accounting.journal.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
+            // dd($th);
             // return redirect()->back();
         }
-        // echo date('Y-m-d'. strtotime($request->register));
-        // dd(date('Y-m-d'. strtotime($request->register)));
     }
 
     public function show($id)
@@ -120,11 +117,11 @@ class JournalController extends Controller
     public function update(Request $request, $id)
     {
         $journal = Journal::findOrFail($id);
-        if(Auth::user()->can('isManager')){
+        if (Auth::user()->can('isManager')) {
             // dd($request->status);
 
-           try {
-                if($request->status == 'approved'){
+            try {
+                if ($request->status == 'approved') {
                     // $journal->update([
                     //     'status' => $request->status
                     // ]);
@@ -134,7 +131,7 @@ class JournalController extends Controller
                         'note' => ''
                     ]);
                     return 1;
-                }else{
+                } else {
                     // $journal->update([
                     //     'status' => $request->status,
                     //     'note' => $request->note
@@ -148,19 +145,17 @@ class JournalController extends Controller
                     return 1;
                     // dd($request->all());
                 }
-
-           } catch (\Throwable $th) {
-               dd($th);
-               return 0;
-           }
-
-        }else{
+            } catch (\Throwable $th) {
+                dd($th);
+                return 0;
+            }
+        } else {
             DB::beginTransaction();
 
             // $date = (new DateTime(strtotime($request->register)))->format('Y-m-d');
             $date = date('Y-m-d', strtotime($request->register));
             try {
-                $data=[
+                $data = [
                     'register' =>  $date,
                     'title' => $request->title,
                     'description' => $request->description
@@ -168,7 +163,7 @@ class JournalController extends Controller
                 $journal->update($data);
                 DB::table('journal_details')->where('journal_id', $journal->id)->delete();
 
-                for($i = 0; $i< count($request->accounts); $i++){
+                for ($i = 0; $i < count($request->accounts); $i++) {
                     $journal_details_data[$i] = [
                         'journal_id' => $journal->id,
                         'account_id' => $request->accounts[$i],
@@ -196,16 +191,16 @@ class JournalController extends Controller
 
     public function destroy(Journal $journal)
     {
-       try {
-        $journal->delete();
-        return 'Item Berhasil Di Hapus';
-       } catch (\Throwable $th) {
-           return $th;
-       }
-
+        try {
+            $journal->delete();
+            return 'Item Berhasil Di Hapus';
+        } catch (\Throwable $th) {
+            return $th;
+        }
     }
 
-    function deleteItemDetail ($id) {
+    function deleteItemDetail($id)
+    {
         try {
             // $journal->delete();
             // $journalDetails->delete();
@@ -213,10 +208,9 @@ class JournalController extends Controller
             $journalDetails = JournalDetail::findOrFail($id);
             $journalDetails->delete();
             return 'Item Berhasil Di Hapus';
-           } catch (\Throwable $th) {
-               return $th;
-           }
-
+        } catch (\Throwable $th) {
+            return $th;
+        }
     }
 
     public function report($id)
