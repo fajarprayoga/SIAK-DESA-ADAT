@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class IncomeStatement extends Model
 {
-    protected $table = 'income_statement'; // Menggunakan huruf kecil dan garis bawah alih-alih camel case
+    protected $table = 'incomestatement'; // Menggunakan huruf kecil dan garis bawah alih-alih camel case
     protected $fillable = [
         'register',
         'title',
@@ -16,6 +16,6 @@ class IncomeStatement extends Model
 
     public function incomeStatementDetail() // Menggunakan gaya camel case untuk nama metode
     {
-        return $this->hasMany(Incomestatement_detail::class, 'income_statement_id', 'id'); // Gunakan ::class untuk namespace
+        return $this->hasMany(Incomestatement_detail::class, 'incomestatement_id', 'id'); // Gunakan ::class untuk namespace
     }
 }
