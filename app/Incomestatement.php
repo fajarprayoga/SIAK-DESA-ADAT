@@ -14,7 +14,7 @@ class IncomeStatement extends Model
         'note'
     ];
 
-    public function incomeStatementDetail() // Menggunakan gaya camel case untuk nama metode
+    public function incomestatement_detail() // Menggunakan gaya camel case untuk nama metode
     {
         return $this->hasMany(Incomestatement_detail::class, 'incomestatement_id', 'id'); // Gunakan ::class untuk namespace
     }
