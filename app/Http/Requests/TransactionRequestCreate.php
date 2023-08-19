@@ -24,12 +24,11 @@ class TransactionRequestCreate extends FormRequest
     public function rules()
     {
         return [
-            // 'created_at' => 'required',
-            'vehicle_number' => 'required',
-            'vehicle' =>'required',
-            // 'type_material' => 'required',
             'material_id' => 'required',
             'price_material' => 'required',
+            'cost_of_goods' => 'required',
+            'quantity' => 'required',
+            'discount' => 'required',
         ];
     }
 }
