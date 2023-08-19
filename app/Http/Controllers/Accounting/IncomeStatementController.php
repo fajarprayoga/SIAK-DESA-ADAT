@@ -192,6 +192,7 @@ class IncomeStatementController extends Controller
 
         try {
             //code...
+            dd('ja;p');
             $total = Incomestatement::selectRaw('sum(incomestatement_detail.amount) as amount_total, sum(incomestatement_detail.expense) as expense_total')
                 ->where('incomestatement.id', $id)
                 ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')
