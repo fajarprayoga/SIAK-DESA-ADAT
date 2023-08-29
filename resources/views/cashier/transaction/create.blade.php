@@ -1,5 +1,26 @@
 @extends('admin.template')
+@section('header')
+    <style>
+        /* Menggunakan kelas form-control untuk mengatur lebar elemen select */
+        .select2 {
+            width: 100%;
+            /* padding: .500rem .75rem */
+            /* Atur lebar sesuai kebutuhan Anda */
+        }
 
+        .select2-container--default .select2-selection--single {
+            height: 2.3rem;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ced4da
+        }
+
+        .select2-selection__arrow {
+            display: flex;
+            align-items: center
+        }
+    </style>
+@endsection
 @section('content')
     <div class="row">
         <div class="col-xl-9 mx-auto">
@@ -48,12 +69,11 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="material_id" class="form-label">@lang('global.transaction.name_property')</label>
-                                        <select name="material_id" id="material_id" class="form-control">
+                                        <select name="material_id" id="material_id" class="select2 form-control ">
                                             <option value="">---</option>
-                                            {{-- <option value="Cor">Cor</option>
-                                        <option value="Super">Super</option> --}}
                                             @foreach ($materials as $material)
-                                                <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                                <option value="{{ $material->id }}">
+                                                    {{ "[$material->code] " . $material->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -81,7 +101,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="discount" class="form-label">@lang('global.transaction.discount')</label>
-                                        <input class="form-control price" type="number" id="discount" name="discount">
+                                        <input class="form-control price" value="0" type="number" id="discount"
+                                            name="discount">
                                     </div>
                                 </div>
                             </div>

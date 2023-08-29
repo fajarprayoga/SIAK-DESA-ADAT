@@ -24,24 +24,26 @@
                                         <thead class="table-secondary">
                                             <tr>
                                                 <th>No</th>
-                                                <th>@lang('global.transaction.vehicle_number')</th>
-                                                <th>@lang('global.transaction.vehicle')</th>
-                                                <th>@lang('global.transaction.type_material')</th>
-                                                <th>@lang('global.transaction.price_material')</th>
                                                 <th>@lang('global.transaction.nomor')</th>
-                                                <th>@lang('global.transaction.gosek')</th>
+                                                <th>@lang('global.transaction.name_property')</th>
+                                                <th>@lang('global.transaction.cost_of_goods')</th>
+                                                <th>@lang('global.transaction.price_material')</th>
+                                                <th>@lang('global.transaction.quantity')</th>
+                                                <th>@lang('global.transaction.discount')</th>
+                                                <th>@lang('global.transaction.total')</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($transactions as $index => $item)
                                                 <tr>
                                                     <td> {{ $index + 1 }} </td>
-                                                    <td> {{ $item->vehicle_number }} </td>
-                                                    <td> {{ $item->vehicle }} </td>
-                                                    <td> {{ $item->material->name }} </td>
-                                                    <td> {{ Rupiah($item->price_material) }} </td>
                                                     <td> {{ $item->nomor }} </td>
-                                                    <td> {{ $item->gosek != null ? Rupiah($item->gosek->expense) : 0 }}
+                                                    <td> {{ $item->material?->name }} </td>
+                                                    <td> {{ Rupiah($item->cost_of_goods) }} </td>
+                                                    <td> {{ Rupiah($item->price_material) }} </td>
+                                                    <td> {{ $item->quantity }} </td>
+                                                    <td> {{ $item->discount }}% </td>
+                                                    <td> {{ Rupiah($item->total) }}
                                                     </td>
                                                 </tr>
                                             @endforeach

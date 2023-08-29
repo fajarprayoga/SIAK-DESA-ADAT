@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Transaction;
 use App\Material;
 use function PHPSTORM_META\type;
+use function PHPUnit\Framework\isEmpty;
+
 use DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -106,18 +108,21 @@ class TransactionController extends Controller
             $transaction_nomor = $this->acc_code_generate($last_code, 8, 3);
 
             // dd($request->date);
+            $price_material = $request->price_material ? str_replace(".", "",  $request->price_material) : 0;
+            $cost_of_goods = $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods) : 0;
 
             $data = array(
                 'nomor' => $transaction_nomor,
                 'material_id' => $request->material_id,
                 'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
                 'name' => $request->name_property,
-                'discount' => $request->discount,
+                'discount' => $request->discount ?? 0,
                 'quantity' => $request->quantity,
-                'price_material' => $request->price_material ? str_replace(".", "",  $request->price_material)  : 0,
-                'cost_of_goods' => $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods)  : 0,
-                'total' => ($request->price_material * $request->quantity) * ($request->discount / 100)
+                'price_material' => $price_material,
+                'cost_of_goods' => $cost_of_goods,
+                'total' => ($price_material * $request->quantity) - (($price_material * $request->quantity) * ($request->discount / 100))
             );
+
 
             $transaction = Transaction::create($data);
 
@@ -163,8 +168,9 @@ class TransactionController extends Controller
             DB::commit();
             return redirect()->route('cashier.transaction.index')->with('success', 'Success');
         } catch (\Throwable $th) {
+
+            dd($th->getMessage());
             DB::rollBack();
-            // dd($th);
             return redirect()->back();
         }
 
@@ -288,16 +294,17 @@ class TransactionController extends Controller
 
         try {
             $transaction = Transaction::findOrFail($id);
-
+            $price_material = $request->price_material ? str_replace(".", "",  $request->price_material) : 0;
+            $cost_of_goods = $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods) : 0;
             $data = array(
                 'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
                 'material_id' => $request->material_id,
-                'price_material' =>  $request->price_material ? str_replace(".", "",  $request->price_material)  : 0,
+                'price_material' =>  $price_material,
                 'status' => 1,
-                'discount' => $request->discount,
+                'discount' => ($request->discount) ?? 0,
                 'quantity' => $request->quantity,
-                'cost_of_goods' => $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods)  : 0,
-                'total' => ($request->price_material * $request->quantity) * ($request->discount / 100)
+                'cost_of_goods' => $cost_of_goods,
+                'total' => ($price_material * $request->quantity) - (($price_material * $request->quantity) * ($request->discount / 100))
             );
 
             $transaction->update($data);

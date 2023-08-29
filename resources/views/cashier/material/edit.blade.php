@@ -7,17 +7,23 @@
             <hr>
             <div class="card">
                 <div class="card-body">
-                   <form action="{{ route('cashier.material.update', $material->id) }}" method="POST">
-                    @method('PUT')
-                    @csrf
+                    <form action="{{ route('cashier.material.update', $material->id) }}" method="POST">
+                        @method('PUT')
+                        @csrf
+                        <div class="mb-3">
+                            <label for="code" class="form-label">@lang('global.material.code')</label>
+                            <input class="form-control" type="text" id="code" value="{{ $material->code }}"
+                                name="code" required>
+                        </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">@lang('global.material.name')</label>
-                            <input class="form-control" type="text" id="name" value="{{$material->name}}" name="name" required>
+                            <input class="form-control" type="text" id="name" value="{{ $material->name }}"
+                                name="name" required>
                         </div>
                         <div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
-                   </form>
+                    </form>
                 </div>
             </div>
         </div>

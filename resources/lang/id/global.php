@@ -83,6 +83,7 @@ return [
     ],
     'material' => [
         'title' => 'Material',
+        'code' => 'Kode',
         'name' => 'Nama Material',
         'add' => 'Akun Berhasil Di Tambahkan',
         'edit' => 'Akun Berhasil Di Update',
