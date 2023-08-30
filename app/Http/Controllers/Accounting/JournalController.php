@@ -221,11 +221,11 @@ class JournalController extends Controller
         return $pdf->stream();
     }
 
-    public function expense($date)
-    {
-        $daten = date('Y-m-d', strtotime($date));
-        $expenses = Transaction::where('created_at', $daten)->where('expense', '!=', 0)->get();
+    // public function expense($date)
+    // {
+    //     $daten = date('Y-m-d', strtotime($date));
+    //     $expenses = Transaction::where('created_at', $daten)->where('expense', '!=', 0)->get();
 
-        return json_decode($expenses);
-    }
+    //     return json_decode($expenses);
+    // }
 }
