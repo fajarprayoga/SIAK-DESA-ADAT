@@ -8,6 +8,8 @@ use App\Http\Requests\TransactionRequestCreate;
 use Illuminate\Http\Request;
 use App\Transaction;
 use App\Material;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
 use function PHPSTORM_META\type;
 use function PHPUnit\Framework\isEmpty;
 
@@ -388,43 +390,46 @@ class TransactionController extends Controller
     public function report(Request $request)
     {
         // dd($request->all());
-        $date = date('Y-m-d', strtotime($request->date));
-        $transactions = Transaction::where('created_at', $date)->where([['expense', '<=', 0], ['price_material', '!=', null], ['status', '=', 0]])->get();
-        $transactions_expense = Transaction::where('created_at', $date)->where(function ($query) {
-            $query->where('price_material', '0');
-            $query->orWhere('price_material', '=', null);
-        })->get();
-        // dd($transactions_expense);
+        Carbon::setLocale("id");
+        Config::set("app.locale", "id");
 
-        $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
-        $t_gosek = json_decode($t_gosek, true);
+        $date = Carbon::parse($request->date);
+        $transactions = Transaction::whereBetween('created_at', [$date->startOfDay(), $date->copy()->endOfDay()])->where("total", ">", 0)->get();
+        // $transactions_expense = Transaction::where('created_at', $date)->where(function ($query) {
+        //     $query->where('price_material', '0');
+        //     $query->orWhere('price_material', '=', null);
+        // })->get();
+        // // dd($transactions_expense);
 
-        $sum = array_sum(array_map(function ($var) {
-            return $var['price_material'];
-        }, json_decode($transactions, true)));
+        // $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
+        // $t_gosek = json_decode($t_gosek, true);
 
-        $sum_expense = array_sum(array_map(function ($var) {
-            return $var['expense'];
-        }, json_decode($transactions_expense, true)));
+        // $sum = array_sum(array_map(function ($var) {
+        //     return $var['price_material'];
+        // }, json_decode($transactions, true)));
+
+        // $sum_expense = array_sum(array_map(function ($var) {
+        //     return $var['expense'];
+        // }, json_decode($transactions_expense, true)));
 
 
-        $sum_gosek = 0;
-        if (!is_null(($t_gosek))) {
-            $sum_gosek = array_sum(array_map(function ($var) {
-                return $var['expense'];
-            }, $t_gosek));
+        // $sum_gosek = 0;
+        // if (!is_null(($t_gosek))) {
+        //     $sum_gosek = array_sum(array_map(function ($var) {
+        //         return $var['expense'];
+        //     }, $t_gosek));
 
-            $sum_expense += $sum_gosek;
-        }
+        //     $sum_expense += $sum_gosek;
+        // }
 
 
         $pdf = PDF::loadview('cashier.transaction.report', [
             'transactions' => $transactions,
-            'transactions_expense' => $transactions_expense,
-            'date' => $request->date,
-            'total' => $sum,
-            'total_expense' => $sum_expense,
-            'gosek' => $sum_gosek
+            //'transactions_expense' => $transactions_expense,
+            'date' => $date->isoFormat('dddd, D MMMM Y')
+            //'total' => $sum,
+            //'total_expense' => $sum_expense,
+            //'gosek' => $sum_gosek
         ]);
         return $pdf->stream();
     }

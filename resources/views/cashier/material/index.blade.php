@@ -21,7 +21,7 @@
                     <thead class="table-secondary">
                         <tr>
                             <th>No</th>
-                            <th>@lang('global.material.code')</th>
+                            {{-- <th>@lang('global.material.code')</th> --}}
                             <th>Nama</th>
                             <th width="100px">Action</th>
                         </tr>
@@ -46,10 +46,10 @@
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
-                    {
-                        data: 'code',
-                        name: 'code'
-                    },
+                    // {
+                    //     data: 'code',
+                    //     name: 'code'
+                    // },
                     {
                         data: 'name',
                         name: 'name'
