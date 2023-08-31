@@ -27,6 +27,10 @@
                             <input class="form-control" type="text" id="date" name="title" required >
                         </div>
                         <div class="mb-3">
+                            <label for="title" class="form-label">Potongan  Biaya Karyawan</label>
+                            <input class="form-control price" type="text" id="piece_sand_super" name="amount[]" >
+                        </div>
+                        {{-- <div class="mb-3">
                             <label for="piece_sand_super" class="form-label">@lang('global.incomestatement.piece_sand_super')</label>
                             <input class="form-control price" type="text" id="piece_sand_super" name="amount[]" >
                         </div>
@@ -41,7 +45,7 @@
                         <div class="mb-3">
                             <label for="sale_freight_price" class="form-label">@lang('global.incomestatement.sale_freight_price')</label>
                             <input class="form-control price" type="text" id="sale_freight_price" name="amount[]" >
-                        </div>
+                        </div> --}}
                         <button class="btn btn-primary" type="submit">Tambah</button>
                    </form>
                 </div>

@@ -28,7 +28,7 @@ class TransactionRequestCreate extends FormRequest
             'price_material' => 'required',
             'cost_of_goods' => 'required',
             'quantity' => 'required',
-            'discount' => 'required',
+            // 'discount' => 'numeric',
         ];
     }
 }

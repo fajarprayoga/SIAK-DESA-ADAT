@@ -47,6 +47,7 @@ class MaterialController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'code' => 'required|unique:materials',
             'name' => 'required|unique:materials',
         ]);
 

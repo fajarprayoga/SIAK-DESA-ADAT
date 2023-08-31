@@ -16,6 +16,6 @@ class IncomeStatement extends Model
 
     public function incomestatement_detail() // Menggunakan gaya camel case untuk nama metode
     {
-        return $this->hasMany(Incomestatement_detail::class, 'incomestatement_id', 'id'); // Gunakan ::class untuk namespace
+        return $this->hasMany('App\Incomestatement_detail',  'incomestatement_id', 'id');
     }
 }

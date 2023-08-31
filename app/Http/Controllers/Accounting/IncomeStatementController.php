@@ -95,6 +95,12 @@ class IncomeStatementController extends Controller
 
             $income_table_detail = [];
             // expense
+
+            $pengeluaran = [
+                "Potongan Biaya Karyawan"
+            ];
+
+
             foreach ($trial_balance as $index => $value) {
                 $income_table_detail[$index] = [
                     'incomestatement_id' => $income_table->id,
@@ -106,32 +112,45 @@ class IncomeStatementController extends Controller
                 ];
             }
 
-            // pendapatan
-            $income_table_detail[] = [
-                'incomestatement_id' => $pendapatan->id,
-                'name' => $pendapatan->name,
-                'amount' => $pendapatan->amount,
-                'account_id' => $pendapatan->account_id,
-                'expense' => 0,
-                'type' => 'income'
-            ];
-            $pendapatan = [
-                "Potongan Penjualan Pasir Super",
-                "Potongan Penjualan Pasir Cor",
-                "Potongan Penjualan Batu",
-                "Biaya Angkut Penjualan",
-            ];
 
-            foreach ($pendapatan as $index => $value) {
-                $income_table_detail[] = [
+            foreach ($pengeluaran as $index => $value) {
+                $income_table_detail[$index] = [
                     'incomestatement_id' => $income_table->id,
                     'name' => $value,
-                    'amount' => $request->amount[$index] ?  str_replace(".", "",  $request->amount[$index])  : 0,
+                    'expense' => (int) str_replace(".", "", $request->amount[$index]),
                     'account_id' => null,
-                    'expense' => 0,
-                    'type' => 'income',
+                    'amount' => 0,
+                    'type' => 'expense'
                 ];
             }
+
+            // pendapatan
+            // $income_table_detail[] = [
+            //     'incomestatement_id' => $pendapatan->id,
+            //     'name' => $pendapatan->name,
+            //     'amount' => $pendapatan->amount,
+            //     'account_id' => $pendapatan->account_id,
+            //     'expense' => 0,
+            //     'type' => 'income'
+            // ];
+
+            // $pendapatan = [
+            //     "Potongan Penjualan Pasir Super",
+            //     "Potongan Penjualan Pasir Cor",
+            //     "Potongan Penjualan Batu",
+            //     "Biaya Angkut Penjualan",
+            // ];
+
+            // foreach ($pendapatan as $index => $value) {
+            //     $income_table_detail[] = [
+            //         'incomestatement_id' => $income_table->id,
+            //         'name' => $value,
+            //         'amount' => $request->amount[$index] ?  str_replace(".", "",  $request->amount[$index])  : 0,
+            //         'account_id' => null,
+            //         'expense' => 0,
+            //         'type' => 'income',
+            //     ];
+            // }
 
             // dd($income_table_detail);
             // $income_detail = Incomestatement_detail::create($income_table_detail);
@@ -140,8 +159,8 @@ class IncomeStatementController extends Controller
             return redirect()->route('accounting.incomestatement.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
-            return redirect()->back();
+            throw $th;
+            //return redirect()->back();
         }
     }
 
