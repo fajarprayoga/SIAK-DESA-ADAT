@@ -16,6 +16,6 @@ class Incomestatement extends Model
 
     public function incomestatement_detail()
     {
-        return $this->hasMany('App\incomestatement_detail',  'incomestatement_id', 'id');
+        return $this->hasMany('App\Incomestatement_detail',  'incomestatement_id', 'id');
     }
 }

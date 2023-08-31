@@ -36,6 +36,7 @@
                 <th>Harga Barang</th>
                 <th>Jumlah Barang</th>
                 <th>Diskon</th>
+                <th>Subtotal</th>
                 {{-- <th>Total</th> --}}
             </tr>
         </thead>
@@ -53,10 +54,11 @@
                     <td> {{ Rupiah($transaction->price_material) }} </td>
                     <td>{{ $transaction->quantity }}</td>
                     <td>{{ $transaction->discount }}%</td>
+                    <td>{{Rupiah($transaction->total)}}</td>
                 </tr>
             @endforeach
             <tr style="text-align: center; background-color:  #728FCE; font-weight: bold; color: white; font-size: 30px">
-                <td colspan="6">Total</td>
+                <td colspan="7">Total</td>
                 <td>{{ Rupiah($transactions->sum('total')) }}</td>
             </tr>
         </tbody>

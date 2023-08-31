@@ -36,7 +36,6 @@
                 <th class="types">Kredit</th>
             </tr>
         </thead>
-        {{-- {{dd($trial_balance)}} --}}
         <tbody style="font-size: 7pt">
                 <?php
                     $sum_debit = 0;
