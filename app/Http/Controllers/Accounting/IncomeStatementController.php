@@ -89,27 +89,30 @@ class IncomeStatementController extends Controller
                 'title' => $request->title,
                 'register' => $date
             ]);
-            $pendapatan = DB::table('trial_balance_detail')
-                ->where('trial_balance_id', $request->trial_balance_id)
-                ->join('accounts', function ($join) {
-                    $join->on('trial_balance_detail.account_id', '=', 'accounts.id')
-                        ->where('accounts.code', '=', 4000);
-                })
-                ->first();
+            // $pendapatan = DB::table('trial_balance_detail')
+            //     ->where('trial_balance_id', $request->trial_balance_id)
+            //     ->join('accounts', function ($join) {
+            //         $join->on('trial_balance_detail.account_id', '=', 'accounts.id')
+            //             ->where('accounts.code', '=', 4000);
+            //     })
+            //     ->first();
 
 
             $tb = TrialBalance::query()
                 ->find($request->trial_balance_id);
-                              
+
             $transactions  = Transaction::query()
                 ->with("material")
                 ->selectRaw("SUM(total) as total_transaction, SUM(cost_of_goods * quantity) as cogs_total ,material_id")
-                ->whereBetween("created_at", [
-                    Carbon::parse($tb->register)->startOfDay(), Carbon::parse($tb->end_date)->endOfDay()]
+                ->whereBetween(
+                    "created_at",
+                    [
+                        Carbon::parse($tb->register)->startOfDay(), Carbon::parse($tb->end_date)->endOfDay()
+                    ]
                 )
                 ->groupBy("material_id")
                 ->get();
-            
+
             $income_table_detail = [];
             // expense
 
@@ -129,27 +132,28 @@ class IncomeStatementController extends Controller
                 ];
             }
 
-            
+
             foreach ($pengeluaran as $index => $value) {
                 $income_table_detail[$index] = [
                     'incomestatement_id' => $income_table->id,
                     'name' => $value,
                     'expense' => (int) str_replace(".", "", $request->amount[$index]),
                     'account_id' => null,
-                        'amount' => 0,
-                        'type' => 'expense'
+                    'amount' => 0,
+                    'type' => 'expense'
                 ];
             }
 
             //pendapatan
-            $income_table_detail[] = [
-                'incomestatement_id' => $pendapatan->id,
-                'name' => $pendapatan->name,
-                'amount' => $pendapatan->amount,
-                'account_id' => $pendapatan->account_id,
-                'expense' => 0,
-                'type' => 'income'
-            ];
+            // dd($pendapatan);
+            // $income_table_detail[] = [
+            //     'incomestatement_id' => $pendapatan->id,
+            //     'name' => $pendapatan->name,
+            //     'amount' => $pendapatan->amount,
+            //     'account_id' => $pendapatan->account_id,
+            //     'expense' => 0,
+            //     'type' => 'income'
+            // ];
 
             // $pendapatan = [
             //     "Potongan Penjualan Pasir Super",
@@ -161,7 +165,7 @@ class IncomeStatementController extends Controller
             foreach ($transactions as $index => $transaction) {
                 $income_table_detail[] = [
                     'incomestatement_id' => $income_table->id,
-                    'name' => "Penjualan ".$transaction->material->name,
+                    'name' => "Penjualan " . $transaction->material->name,
                     'amount' => $transaction->total_transaction - $transaction->cogs_total,
                     'account_id' => null,
                     'expense' => 0,
@@ -173,11 +177,12 @@ class IncomeStatementController extends Controller
             // dd($income_table_detail);
             // $income_detail = Incomestatement_detail::create($income_table_detail);
             $income_table->incomestatement_detail()->createMany($income_table_detail);
+
             DB::commit();
             return redirect()->route('accounting.incomestatement.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-           throw $th;
+            throw $th;
             //return redirect()->back();
         }
     }
