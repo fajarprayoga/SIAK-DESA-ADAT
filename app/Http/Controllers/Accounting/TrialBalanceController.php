@@ -13,43 +13,45 @@ use DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
+
 class TrialBalanceController extends Controller
 {
-    public function trialbalancedata (Request $request){
+    public function trialbalancedata(Request $request)
+    {
         if ($request->ajax()) {
             $data = TrialBalance::latest()->get();
 
             return Datatables::of($data)
-                    ->editColumn('status', function($row) {
-                        if($row->status == 'pending'){
-                            $class = 'bg-warning';
-                        }else if($row->status == 'approved'){
-                            $class = 'bg-primary';
-                        }else{
-                            $class = 'bg-danger';
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'pending') {
+                        $class = 'bg-warning';
+                    } else if ($row->status == 'approved') {
+                        $class = 'bg-primary';
+                    } else {
+                        $class = 'bg-danger';
+                    }
+                    return '<span class="badge ' . $class . '"> ' . $row->status . '</span>';
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '';
+                    $btn .= ' <a href="' . route('accounting.trialbalance.report', $row->id) . '" class=" btn btn-info btn-md my-1">View</a>';
+                    if (Auth::user()->can('isAccounting')) {
+                        if ($row->status != 'approved') {
+                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' . $row->id . ')" class=" btn btn-danger btn-md my-1">Delete</a>';
                         }
-                        return '<span class="badge '.$class.'"> '. $row->status .'</span>';
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                        $btn='';
-                        $btn .= ' <a href="' .route('accounting.trialbalance.report', $row->id). '" class=" btn btn-info btn-md my-1">View</a>';
-                        if(Auth::user()->can('isAccounting')){
-                                if($row->status != 'approved'){
-                                    $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-md my-1">Delete</a>';
-                                }
 
-                            // $btn = ' <a href="' .route('accounting.ledger.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
-                            // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
-                        }
-                        if(Auth::user()->can('isManager') && $row->status !='approved'){
-                            $btn.= ' <button class="btn btn-md btn-primary btn-approve mr-1" data-id = "'. $row->id .'" onclick="approve('.$row->id.')">Terima </button>';
-                            $btn.= '<button class="btn btn-md btn-danger btn-reject" onclick="rejected('.$row->id.')" >Tolak</button>';
-                        }
-                        return $btn;
-                    })
-                    ->rawColumns(['details','action', 'status'])
-                    ->make(true);
+                        // $btn = ' <a href="' .route('accounting.ledger.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
+                        // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
+                    }
+                    if (Auth::user()->can('isManager') && $row->status != 'approved') {
+                        $btn .= ' <button class="btn btn-md btn-primary btn-approve mr-1" data-id = "' . $row->id . '" onclick="approve(' . $row->id . ')">Terima </button>';
+                        $btn .= '<button class="btn btn-md btn-danger btn-reject" onclick="rejected(' . $row->id . ')" >Tolak</button>';
+                    }
+                    return $btn;
+                })
+                ->rawColumns(['details', 'action', 'status'])
+                ->make(true);
         }
     }
 
@@ -60,7 +62,7 @@ class TrialBalanceController extends Controller
         return view('accounting.trialbalance.index');
     }
 
-   function create()
+    function create()
     {
         $ledgers = Ledger::all();
         // dd($ledgers);
@@ -103,21 +105,19 @@ class TrialBalanceController extends Controller
                 $trial_balance_detail[$key] = [
                     'date' => (new DateTime($trial_balance->register))->format('Y-m-d'),
                     'account_id' => $value->id,
-                    'amount' => array_key_exists($value->id,$data_trial_balance)? $data_trial_balance[$value->id]['amount'] : 0 ,
+                    'amount' => array_key_exists($value->id, $data_trial_balance) ? $data_trial_balance[$value->id]['amount'] : 0,
                 ];
             }
-
+            // dd($trial_balance_detail);
             $trial_balance->trial_balance_detail()->createMany($trial_balance_detail);
 
             DB::commit();
             return redirect()->route('accounting.trialbalance.index')->with('success', 'Success');
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
+            // dd($th);
             return redirect()->back();
         }
-
     }
 
 
@@ -137,12 +137,12 @@ class TrialBalanceController extends Controller
     {
         try {
             $trial_balance = TrialBalance::findOrFail($id);
-            if($request->status == 'approved'){
+            if ($request->status == 'approved') {
                 $trial_balance->update([
                     'status' => $request->status
                 ]);
                 return 1;
-            }else{
+            } else {
                 $trial_balance->update([
                     'status' => $request->status,
                     'note' => $request->note
@@ -171,14 +171,13 @@ class TrialBalanceController extends Controller
     {
 
         $trial_balance = TrialBalance::where('id', $id)
-        ->with(['trial_balance_detail' => function($query) {
-            $query->with('account');
-            $query->orderBy('date', 'ASC');
-        }])->first();
+            ->with(['trial_balance_detail' => function ($query) {
+                $query->with('account');
+                $query->orderBy('date', 'ASC');
+            }])->first();
 
 
         $pdf = PDF::loadview('accounting.trialbalance.report', ['trial_balance' => $trial_balance]);
         return $pdf->stream();
     }
-
 }

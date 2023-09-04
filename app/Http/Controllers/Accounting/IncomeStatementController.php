@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Accounting;
 use App\Http\Controllers\Controller;
 use App\Incomestatement;
 use App\Incomestatement_detail;
+use App\Journal;
+use App\Ledger;
+use App\Transaction;
 use App\TrialBalance;
 use App\TrialBalanceDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use DataTables;
 use PDF;
@@ -85,13 +89,29 @@ class IncomeStatementController extends Controller
                 'title' => $request->title,
                 'register' => $date
             ]);
-            $pendapatan = DB::table('trial_balance_detail')
-                ->where('trial_balance_id', $request->trial_balance_id)
-                ->join('accounts', function ($join) {
-                    $join->on('trial_balance_detail.account_id', '=', 'accounts.id')
-                        ->where('accounts.code', '=', 4000);
-                })
-                ->first();
+            // $pendapatan = DB::table('trial_balance_detail')
+            //     ->where('trial_balance_id', $request->trial_balance_id)
+            //     ->join('accounts', function ($join) {
+            //         $join->on('trial_balance_detail.account_id', '=', 'accounts.id')
+            //             ->where('accounts.code', '=', 4000);
+            //     })
+            //     ->first();
+
+
+            $tb = TrialBalance::query()
+                ->find($request->trial_balance_id);
+
+            $transactions  = Transaction::query()
+                ->with("material")
+                ->selectRaw("SUM(total) as total_transaction, SUM(cost_of_goods * quantity) as cogs_total ,material_id")
+                ->whereBetween(
+                    "created_at",
+                    [
+                        Carbon::parse($tb->register)->startOfDay(), Carbon::parse($tb->end_date)->endOfDay()
+                    ]
+                )
+                ->groupBy("material_id")
+                ->get();
 
             $income_table_detail = [];
             // expense
@@ -124,7 +144,8 @@ class IncomeStatementController extends Controller
                 ];
             }
 
-            // pendapatan
+            //pendapatan
+            // dd($pendapatan);
             // $income_table_detail[] = [
             //     'incomestatement_id' => $pendapatan->id,
             //     'name' => $pendapatan->name,
@@ -141,20 +162,22 @@ class IncomeStatementController extends Controller
             //     "Biaya Angkut Penjualan",
             // ];
 
-            // foreach ($pendapatan as $index => $value) {
-            //     $income_table_detail[] = [
-            //         'incomestatement_id' => $income_table->id,
-            //         'name' => $value,
-            //         'amount' => $request->amount[$index] ?  str_replace(".", "",  $request->amount[$index])  : 0,
-            //         'account_id' => null,
-            //         'expense' => 0,
-            //         'type' => 'income',
-            //     ];
-            // }
+            foreach ($transactions as $index => $transaction) {
+                $income_table_detail[] = [
+                    'incomestatement_id' => $income_table->id,
+                    'name' => "Penjualan " . $transaction->material->name,
+                    'amount' => $transaction->total_transaction - $transaction->cogs_total,
+                    'account_id' => null,
+                    'expense' => 0,
+                    'type' => 'income',
+                ];
+            }
+
 
             // dd($income_table_detail);
             // $income_detail = Incomestatement_detail::create($income_table_detail);
             $income_table->incomestatement_detail()->createMany($income_table_detail);
+
             DB::commit();
             return redirect()->route('accounting.incomestatement.index')->with('success', 'Success');
         } catch (\Throwable $th) {
@@ -214,9 +237,7 @@ class IncomeStatementController extends Controller
             ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')
             ->first();
 
-        // dd($total);
         $incomestatement = Incomestatement::with('incomestatement_detail')->findOrFail($id);
-        // dd($incomestatement);
 
         $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total]);
         return $pdf->stream();

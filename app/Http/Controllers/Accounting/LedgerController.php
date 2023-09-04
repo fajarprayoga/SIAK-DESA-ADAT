@@ -9,6 +9,7 @@ use App\JournalDetail;
 use App\Ledger;
 use App\LedgerDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use DataTables;
 use DateTime;
@@ -110,7 +111,10 @@ class LedgerController extends Controller
             $journal_details = JournalDetail::whereIn('journal_id', $journal_id)->get();
 
             // insert ledger
-            $ledger = Ledger::create($request->all());
+            $ledger = Ledger::create($request->all() + [
+                "start_date" => Carbon::parse("{$request->monthStart}-01"),
+                "end_date" => Carbon::parse("{$request->monthEnd}-01")->endOfMonth(),
+            ]);
 
             $ledger_detail_data = [];
             // (new DateTime($journal_details[$i]->created_at))->format('Y-m-d');

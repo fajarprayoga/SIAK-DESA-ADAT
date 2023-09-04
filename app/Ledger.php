@@ -12,6 +12,8 @@ class Ledger extends Model
         'register',
         'description',
         'status',
+        'start_date',
+        'end_date',
         'note'
     ];
 
