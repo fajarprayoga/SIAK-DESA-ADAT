@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Accounting;
 use App\Http\Controllers\Controller;
 use App\Incomestatement;
 use App\Incomestatement_detail;
+use App\Journal;
+use App\Ledger;
+use App\Transaction;
 use App\TrialBalance;
 use App\TrialBalanceDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use DataTables;
 use PDF;
@@ -93,6 +97,19 @@ class IncomeStatementController extends Controller
                 })
                 ->first();
 
+
+            $tb = TrialBalance::query()
+                ->find($request->trial_balance_id);
+                              
+            $transactions  = Transaction::query()
+                ->with("material")
+                ->selectRaw("SUM(total) as total_transaction, SUM(cost_of_goods * quantity) as cogs_total ,material_id")
+                ->whereBetween("created_at", [
+                    Carbon::parse($tb->register)->startOfDay(), Carbon::parse($tb->end_date)->endOfDay()]
+                )
+                ->groupBy("material_id")
+                ->get();
+            
             $income_table_detail = [];
             // expense
 
@@ -124,15 +141,15 @@ class IncomeStatementController extends Controller
                 ];
             }
 
-            // pendapatan
-            // $income_table_detail[] = [
-            //     'incomestatement_id' => $pendapatan->id,
-            //     'name' => $pendapatan->name,
-            //     'amount' => $pendapatan->amount,
-            //     'account_id' => $pendapatan->account_id,
-            //     'expense' => 0,
-            //     'type' => 'income'
-            // ];
+            //pendapatan
+            $income_table_detail[] = [
+                'incomestatement_id' => $pendapatan->id,
+                'name' => $pendapatan->name,
+                'amount' => $pendapatan->amount,
+                'account_id' => $pendapatan->account_id,
+                'expense' => 0,
+                'type' => 'income'
+            ];
 
             // $pendapatan = [
             //     "Potongan Penjualan Pasir Super",
@@ -141,16 +158,17 @@ class IncomeStatementController extends Controller
             //     "Biaya Angkut Penjualan",
             // ];
 
-            // foreach ($pendapatan as $index => $value) {
-            //     $income_table_detail[] = [
-            //         'incomestatement_id' => $income_table->id,
-            //         'name' => $value,
-            //         'amount' => $request->amount[$index] ?  str_replace(".", "",  $request->amount[$index])  : 0,
-            //         'account_id' => null,
-            //         'expense' => 0,
-            //         'type' => 'income',
-            //     ];
-            // }
+            foreach ($transactions as $index => $transaction) {
+                $income_table_detail[] = [
+                    'incomestatement_id' => $income_table->id,
+                    'name' => "Penjualan ".$transaction->material->name,
+                    'amount' => $transaction->total_transaction - $transaction->cogs_total,
+                    'account_id' => null,
+                    'expense' => 0,
+                    'type' => 'income',
+                ];
+            }
+
 
             // dd($income_table_detail);
             // $income_detail = Incomestatement_detail::create($income_table_detail);
@@ -210,7 +228,6 @@ class IncomeStatementController extends Controller
     {
 
         try {
-            //code...
             $total = Incomestatement::selectRaw('sum(incomestatement_detail.amount) as amount_total, sum(incomestatement_detail.expense) as expense_total')
                 ->where('incomestatement.id', $id)
                 ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')

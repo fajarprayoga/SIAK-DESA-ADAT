@@ -23,6 +23,11 @@
                             <label for="register" class="form-label">@lang('global.trialbalance.register')</label>
                             <input class="form-control" type="text" id="date" name="register" required >
                         </div>
+                       
+                        <div class="mb-3">
+                            <label for="register" class="form-label">@lang('global.trialbalance.end_date')</label>
+                            <input class="form-control" type="text" id="date" name="end_date" required >
+                        </div>
                         <div class="mb-3">
                             <label for="title" class="form-label">@lang('global.trialbalance.title')</label>
                             <input class="form-control" type="text" id="title" name="title" required >
