@@ -26,7 +26,7 @@
 
                         <div class="mb-3">
                             <label for="register" class="form-label">@lang('global.trialbalance.end_date')</label>
-                            <input class="form-control date" type="text" id="date" name="end_date" required>
+                            <input class="form-control date" type="text" id="end_date" name="end_date" required>
                         </div>
                         <div class="mb-3">
                             <label for="title" class="form-label">@lang('global.trialbalance.title')</label>

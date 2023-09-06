@@ -8,6 +8,7 @@ use App\Ledger;
 use App\TrialBalance;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use DataTables;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +78,8 @@ class TrialBalanceController extends Controller
         try {
             // $request->register =  (new DateTime($request->register))->format('Y-m-d');
             $data = $request->all();
-            $data['register'] = (new DateTime($request->register))->format('Y-m-d');
+            $data['register'] = Carbon::parse($data["register"])->format("Y-m-d");
+            $data['end_date'] = Carbon::parse($data["end_date"])->format("Y-m-d");
 
             $trial_balance = TrialBalance::create($data);
             $ledger = Ledger::with('ledger_detail')->where('id', $request->ledger_id)->first();

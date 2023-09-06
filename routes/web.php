@@ -1,5 +1,6 @@
 <?php
 
+use App\Transaction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Auth::routes();
+
+Route::get("test", fn() => Transaction::all());
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'Admin\DashboardController@index')->middleware('auth');
 Route::get('/login', 'Admin\AuthController@index')->name('admin.auth.index');

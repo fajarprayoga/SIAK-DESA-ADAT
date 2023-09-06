@@ -9,6 +9,7 @@ class TrialBalance extends Model
     protected $table = 'trial_balance';
     protected $fillable = [
         'register',
+        'end_date',
         'title',
         'description',
         'status',
