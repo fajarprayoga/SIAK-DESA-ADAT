@@ -77,6 +77,13 @@
                             @lang('global.incomestatement.incomestatement')
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('accounting.profit-sharing.index') }}">
+                            <i
+                                class="bi bi-circle {{ request()->is('accounting/profit-sharing/*') ? 'mm-active' : '' }}"></i>
+                            @lang('global.profit-sharing.profit-sharing')
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endif

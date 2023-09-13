@@ -60,6 +60,11 @@ Route::group(['prefix' => 'accounting', 'as' => 'accounting.', 'namespace' => 'A
     Route::resource('incomestatement', 'IncomeStatementController');
     Route::get('incomestatementdata', 'IncomeStatementController@incomestatementdata')->name('incomestatement.incomestatementdata');
     Route::get('incomestatement/report/{id}', 'IncomeStatementController@report')->name('incomestatement.report');
+
+    Route::resource('profit-sharing', 'ProfitSharingController');
+    Route::get('profit-sharing-data', "ProfitSharingController@profitSharingData")->name('profit-sharing.profit-sharing-data');
+    Route::get('profit-sharing/report/{profit_sharing}', "ProfitSharingController@report")->name("profit-sharing.report");
+    
 });
 
 // cashier or employeess
