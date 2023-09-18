@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LedgerDetail extends Model
 {
-    protected $table='ledger_details';
+    protected $table = 'ledger_details';
     protected $fillable = [
         'date',
         'ledger_id',

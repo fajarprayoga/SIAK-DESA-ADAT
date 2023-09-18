@@ -232,19 +232,14 @@ class IncomeStatementController extends Controller
     public function report($id)
     {
 
-        try {
-            $total = Incomestatement::selectRaw('sum(incomestatement_detail.amount) as amount_total, sum(incomestatement_detail.expense) as expense_total')
-                ->where('incomestatement.id', $id)
-                ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')
-                ->first();
+        $total = Incomestatement::selectRaw('sum(incomestatement_detail.amount) as amount_total, sum(incomestatement_detail.expense) as expense_total')
+            ->where('incomestatement.id', $id)
+            ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')
+            ->first();
 
-            // dd($total);
-            $incomestatement = Incomestatement::with('incomestatement_detail')->findOrFail($id);
+        $incomestatement = Incomestatement::with('incomestatement_detail')->findOrFail($id);
 
-            $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total]);
-            return $pdf->stream();
-        } catch (\Throwable $th) {
-            // dd($th->getTraceAsString());
-        }
+        $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total]);
+        return $pdf->stream();
     }
 }

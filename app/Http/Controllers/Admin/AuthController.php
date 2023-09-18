@@ -40,6 +40,7 @@ class AuthController extends Controller
                 return redirect()->back();
             }
         } catch (\Throwable $th) {
+            // dd($th);
             Session::flash('password_wrong','Username atau password yang anda masukan salah, Silahkan coba lagi!');
             return redirect()->back();
         }
