@@ -40,77 +40,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route('cashier.transaction.store') }}" method="POST">
-                        @csrf
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {{-- <input type="hidden" name="date" value="{{$date ? $date : date('d-m-Y')}}"> --}}
-                                    <div class="mb-3">
-                                        <label for="date" class="form-label">@lang('global.transaction.date')</label>
-                                        {{-- <input class="form-control " data-date-format="DD MMMM YYYY" type="text" id="register" name="register" required > --}}
-                                        <input class="result form-control" type="text" id="date"
-                                            value="{{ $date ? $date : date('d-m-Y') }}" name="date" required>
-                                    </div>
-                                </div>
-                                {{-- <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="code_property" class="form-label">@lang('global.transaction.code_property')</label>
-                                        <input class="form-control" type="text" id="code_property" name="code_property"
-                                            required>
-                                    </div>
-                                </div> --}}
-                                {{-- <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="vehicle" class="form-label">@lang('global.transaction.vehicle')</label>
-                                        <input class="form-control" type="text" id="vehicle" name="vehicle" required>
-                                    </div>
-                                </div> --}}
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="material_id" class="form-label">@lang('global.transaction.name_property')</label>
-                                        <select name="material_id" id="material_id" class="select2 form-control ">
-                                            <option value="">---</option>
-                                            @foreach ($materials as $material)
-                                                <option value="{{ $material->id }}">
-                                                    {{ "[$material->code] " . $material->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="cost_of_goods" class="form-label">@lang('global.transaction.cost_of_goods')</label>
-                                        <input class="form-control price" type="text" id="cost_of_goods"
-                                            name="cost_of_goods" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="price_material" class="form-label">@lang('global.transaction.price_material')</label>
-                                        <input class="form-control price" type="text" id="price_material"
-                                            name="price_material" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="quantity" class="form-label">@lang('global.transaction.quantity')</label>
-                                        <input class="form-control price" type="number" id="quantity" name="quantity">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="discount" class="form-label">@lang('global.transaction.discount')</label>
-                                        <input class="form-control price" value="0" type="number" id="discount"
-                                            name="discount">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
+                    @livewire('transaction.transaction-form', ['materials' => $materials])
                 </div>
             </div>
         </div>
@@ -118,6 +48,8 @@
 @endsection
 @section('script')
     <script type="text/javascript">
+    
+
         $('#date').bootstrapMaterialDatePicker({
             // currentDate: new Date(),
             format: 'DD-MM-YYYY',

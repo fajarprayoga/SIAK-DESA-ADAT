@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('/assets/images/favicon-32x32.png" type="image/png') }}" />
     <!--plugins-->
+    @livewireStyles
     @include('admin.partials.css')
     @yield('header')
     <title>
@@ -52,6 +53,7 @@
 
 
     <!-- Bootstrap bundle JS -->
+    @livewireScripts
     @include('admin.partials.js')
     @yield('script')
 

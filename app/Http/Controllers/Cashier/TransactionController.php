@@ -110,13 +110,18 @@ class TransactionController extends Controller
             $transaction_nomor = $this->acc_code_generate($last_code, 8, 3);
 
             // dd($request->date);
-            $price_material = $request->price_material ? str_replace(".", "",  $request->price_material) : 0;
-            $cost_of_goods = $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods) : 0;
+            $price_material = $request->price_material ? str_replace(".", "", $request->price_material) : 0;
+            $cost_of_goods = $request->cost_of_goods ? str_replace(".", "", $request->cost_of_goods) : 0;
+
+            Material::query()->where("id", $request->material_id)->update([
+                "cogs" => $price_material,
+                "price" => $cost_of_goods
+            ]);
 
             $data = array(
                 'nomor' => $transaction_nomor,
                 'material_id' => $request->material_id,
-                'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
+                'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) : date('Y-m-d'),
                 'name' => $request->name_property,
                 'discount' => $request->discount ?? 0,
                 'quantity' => $request->quantity,
@@ -130,8 +135,8 @@ class TransactionController extends Controller
 
             if ($request->gosek != null || $request->gosek != '') {
                 $expense = array(
-                    'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
-                    'expense' =>  $request->gosek  ? str_replace(".", "",  $request->gosek)  : 0,
+                    'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) : date('Y-m-d'),
+                    'expense' => $request->gosek ? str_replace(".", "", $request->gosek) : 0,
                     'transaction_id' => $transaction->id
                 );
                 // create gosek
@@ -254,7 +259,7 @@ class TransactionController extends Controller
         foreach ($type_expense as $key => $value) {
             $data[$key] = [
                 'vehicle_number' => $value,
-                'expense' => $key == 4 ? ($sum  ? str_replace(".", "",  $sum)  : 0) : ($request->expense[$key]  ? str_replace(".", "",   $request->expense[$key])  : 0),
+                'expense' => $key == 4 ? ($sum ? str_replace(".", "", $sum) : 0) : ($request->expense[$key] ? str_replace(".", "", $request->expense[$key]) : 0),
                 'created_at' => date('Y-m-d', strtotime($request->date))
             ];
         }
@@ -296,18 +301,25 @@ class TransactionController extends Controller
 
         try {
             $transaction = Transaction::findOrFail($id);
-            $price_material = $request->price_material ? str_replace(".", "",  $request->price_material) : 0;
-            $cost_of_goods = $request->cost_of_goods ? str_replace(".", "",  $request->cost_of_goods) : 0;
+            $price_material = $request->price_material ? str_replace(".", "", $request->price_material) : 0;
+            $cost_of_goods = $request->cost_of_goods ? str_replace(".", "", $request->cost_of_goods) : 0;
             $data = array(
-                'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
+                'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) : date('Y-m-d'),
                 'material_id' => $request->material_id,
-                'price_material' =>  $price_material,
+                'price_material' => $price_material,
                 'status' => 1,
                 'discount' => ($request->discount) ?? 0,
                 'quantity' => $request->quantity,
                 'cost_of_goods' => $cost_of_goods,
                 'total' => ($price_material * $request->quantity) - (($price_material * $request->quantity) * ($request->discount / 100))
             );
+
+
+            Material::query()->where("id", $request->material_id)->update([
+                "cogs" => $price_material,
+                "price" => $cost_of_goods
+            ]);
+
 
             $transaction->update($data);
 
