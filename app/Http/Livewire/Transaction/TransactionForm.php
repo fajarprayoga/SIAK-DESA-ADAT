@@ -8,15 +8,15 @@ use Livewire\Component;
 class TransactionForm extends Component
 {
     public $materials;
-    public $price;
+    public $price = 0;
     public $material_id;
-    public $cogs;
+    public $cogs = 0;
     public $transaction;
     public bool $update = false;
 
     public function render()
     {
-        
+
         return view('livewire.transaction.transaction-form');
     }
 
@@ -29,8 +29,12 @@ class TransactionForm extends Component
     public function updatedMaterialId($value)
     {
         $material = $this->materials->where("id", $value)->first();
-      
-        $this->price = number_format ($material->price,0,',','.') ?? 0;
-        $this->cogs = number_format($material->cogs,0,',','.') ?? 0;
+
+        if (!$material) {
+            return $this->reset("price", "cogs");
+        }
+
+        $this->price = number_format($material->price, 0, ',', '.') ?? 0;
+        $this->cogs = number_format($material->cogs, 0, ',', '.') ?? 0;
     }
 }

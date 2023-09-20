@@ -22,12 +22,12 @@
                     <div class="mb-3">
                         <label for="material_id" class="form-label">@lang('global.transaction.name_property')</label>
                         <div wire:ignore>
-                            <select name="material_id" id="material_id" class="select2 form-control"
+                            <select name="material_id" id="select-material" class="form-control"
                                 wire:model="material_id">
+                                @if (!$update)
+                                    <option value="">----</option>
+                                @endif
                                 @foreach ($materials as $material)
-                                    @if (!$update)
-                                        <option value="">----</option>
-                                    @endif
                                     <option value="{{ $material->id }}"
                                         {{ $material->id == $transaction?->material_id ? 'selected' : '' }}>
                                         {{ "[$material->code]" . $material->name }}</option>
@@ -75,7 +75,7 @@
     @push('scripts')
      --}}
     <script>
-        $('.select2').on('select2:select', function(e) {
+        $('#select-material').on('select2:select', function(e) {
             var data = e.params.data;
             @this.set('material_id', data['id']);
         });
