@@ -49,6 +49,8 @@ class MaterialController extends Controller
         $validatedData = $request->validate([
             'code' => 'required|unique:materials',
             'name' => 'required|unique:materials',
+            'cogs' => 'required',
+            'price' => 'required',
         ]);
 
         $material = Material::create($request->all());

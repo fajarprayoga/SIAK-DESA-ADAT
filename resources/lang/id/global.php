@@ -89,6 +89,8 @@ return [
         'name' => 'Nama Material',
         'add' => 'Akun Berhasil Di Tambahkan',
         'edit' => 'Akun Berhasil Di Update',
+        'cogs' => 'Harga Jual',
+        'price' => 'Harga Pokok',
     ],
     'trialbalance' => [
         'trialbalance' => 'Neraca Saldo',
@@ -133,7 +135,7 @@ return [
         "incomestatement" => "Total Laba Rugi",
         "punggung-village-share" => "Pemasukan ke Desa Adat Punggung",
         "deprecation_cost" => "Biaya Penyusutan",
-        "employee_share" => "Karyawan"  
+        "employee_share" => "Karyawan"
     ]
-    
+
 ];
