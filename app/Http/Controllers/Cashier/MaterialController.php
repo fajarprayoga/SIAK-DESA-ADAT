@@ -53,7 +53,15 @@ class MaterialController extends Controller
             'price' => 'required',
         ]);
 
-        $material = Material::create($request->all());
+        // $request->price_material ? str_replace(".","",  $request->price_material)  : 0,
+
+        $material = Material::create(
+            [
+                ...$request->all(),
+                'price' => $request->price ?  str_replace(".", "",  $request->price)  : 0,
+                'cogs' => $request->cogs ?  str_replace(".", "",  $request->cogs)  : 0,
+            ]
+        );
         return redirect()->back()->with('success', 'Success');
     }
 
