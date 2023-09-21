@@ -18,12 +18,12 @@
                             <input class="form-control" type="text" id="name" name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="cogs" class="form-label price">@lang('global.material.price')</label>
-                            <input class="form-control" type="text" id="price" name="price" required>
+                            <label for="cogs" class="form-label ">@lang('global.material.price')</label>
+                            <input class="form-control price" type="text" id="price" name="price" required>
                         </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label price">@lang('global.material.cogs')</label>
-                            <input class="form-control" type="text" id="cogs" name="cogs" required>
+                            <label for="name" class="form-label ">@lang('global.material.cogs')</label>
+                            <input class="form-control price" type="text" id="cogs" name="cogs" required>
                         </div>
                         <div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
