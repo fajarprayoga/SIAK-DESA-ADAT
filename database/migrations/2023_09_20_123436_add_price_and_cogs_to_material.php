@@ -16,8 +16,8 @@ class AddPriceAndCogsToMaterial extends Migration
         Schema::table('materials', function (Blueprint $table) {
             //
             $table->decimal("cogs", 13, 2)->default(0);
-            $table->decimal("price", 13,2)->default(0);
-
+            $table->decimal("price", 13, 2)->default(0);
+            // tes
         });
     }
 
