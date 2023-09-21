@@ -20,6 +20,16 @@
                             <input class="form-control" type="text" id="name" value="{{ $material->name }}"
                                 name="name" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="cogs" class="form-label price">@lang('global.material.price')</label>
+                            <input class="form-control" type="text" id="price" name="price"
+                                value="{{ $material->price }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label price">@lang('global.material.cogs')</label>
+                            <input class="form-control" type="text" id="cogs" name="cogs"
+                                value="{{ $material->cogs }}" required>
+                        </div>
                         <div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
@@ -28,4 +38,31 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        $('#date').bootstrapMaterialDatePicker({
+            // currentDate: new Date(),
+            format: 'DD-MM-YYYY',
+            time: false,
+        });
+
+
+        $(document).on('keyup', '.price', function() {
+            formatRp()
+        });
+
+
+        function formatRp() {
+            var amount = $(".price").map(function(index, value) {
+                var rupiah = parseInt($(value).val() == '' ? 0 : $(value).val().split('.').join(""))
+                $(value).val(function(index, item) {
+                    return item
+                        .replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                });
+            });
+        }
+    </script>
 @endsection
