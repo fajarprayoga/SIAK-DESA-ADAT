@@ -21,13 +21,13 @@
                                 name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="cogs" class="form-label price">@lang('global.material.price')</label>
-                            <input class="form-control" type="text" id="price" name="price"
+                            <label for="cogs" class="form-label ">@lang('global.material.price')</label>
+                            <input class="form-control price" type="text" id="price" name="price"
                                 value="{{ $material->price }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label price">@lang('global.material.cogs')</label>
-                            <input class="form-control" type="text" id="cogs" name="cogs"
+                            <label for="name" class="form-label ">@lang('global.material.cogs')</label>
+                            <input class="form-control price" type="text" id="cogs" name="cogs"
                                 value="{{ $material->cogs }}" required>
                         </div>
                         <div>
