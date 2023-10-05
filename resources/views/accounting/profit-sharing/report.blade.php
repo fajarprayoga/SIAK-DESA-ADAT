@@ -15,7 +15,7 @@
         }
     </style>
     <div style="text-align : center">
-        <h5>CV. GIRI HANOMAN SHANTI</h5>
+        <h5>Desa Adat Punggang</h5>
         <h5>Bagi Hasil</h5>
         <h6>{{ $profit_sharing->title }}</h6>
         <h6><a target="_blank" href="{{ url('/') }}">Tanggal
@@ -26,10 +26,10 @@
             <tr>
                 <td class="text-center " style="font-weight: bold">Total Penjualan</td>
                 <td></td>
-               
-                    <td></td>
-                    <td class="text-center" style="font-weight: bold">
-                        {{ Rupiah(str_replace('-', '', $profit_sharing->details['incomestatement'])) }} </td>
+
+                <td></td>
+                <td class="text-center" style="font-weight: bold">
+                    {{ Rupiah(str_replace('-', '', $profit_sharing->details['incomestatement'])) }} </td>
                 <td style="width: 3px"></td>
             </tr>
             <tr>
@@ -39,12 +39,12 @@
                 <th>total</th>
                 <th></th>
             </tr>
-           
+
             @foreach ($profit_sharing->details['share'] as $detail)
                 <tr>
                     <td>{{ __("global.profit-sharing.{$detail['name']}") }}</td>
                     <td>{{ $detail['qty'] }}</td>
-                    <td>{{$detail['value']/$profit_sharing->details['incomestatement'] * 100}}%</td>
+                    <td>{{ ($detail['value'] / $profit_sharing->details['incomestatement']) * 100 }}%</td>
                     <td>{{ Rupiah(str_replace('-', '', $detail['value'])) }} </td>
                     <td style="width: 3px"></td>
                 </tr>
