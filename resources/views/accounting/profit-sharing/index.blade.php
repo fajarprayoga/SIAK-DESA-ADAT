@@ -1,5 +1,5 @@
 @extends('admin.template')
-{{-- tes --}}
+
 @section('content')
     {{-- <h1>@lang('global.incomestatement.incomestatement')</h1> --}}
     <div class="page-breadcrumb d-sm-flex align-items-center mb-3">
