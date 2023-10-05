@@ -89,6 +89,8 @@ return [
         'name' => 'Nama Material',
         'add' => 'Akun Berhasil Di Tambahkan',
         'edit' => 'Akun Berhasil Di Update',
+        'cogs' => 'Harga Jual',
+        'price' => 'Harga Pokok',
     ],
     'trialbalance' => [
         'trialbalance' => 'Neraca Saldo',
@@ -126,5 +128,14 @@ return [
         'piece_sand' => 'Potongan Penjualan Pasir Cor',
         'piece_stone' => 'Potongan Penjualan Batu',
         'sale_freight_price' => 'Harga Angkut Penjualan',
+    ],
+    'profit-sharing' => [
+        'profit-sharing' => "Bagi Hasil",
+        "description" => "Deskripsi Bagi Hasil",
+        "incomestatement" => "Total Laba Rugi",
+        "punggung-village-share" => "Pemasukan ke Desa Adat Punggung",
+        "deprecation_cost" => "Biaya Penyusutan",
+        "employee_share" => "Karyawan"
     ]
+
 ];

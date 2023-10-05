@@ -1,5 +1,6 @@
 <?php
 
+use App\Transaction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Auth::routes();
+
+Route::get("test", fn() => Transaction::all());
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'Admin\DashboardController@index')->middleware('auth');
 Route::get('/login', 'Admin\AuthController@index')->name('admin.auth.index');
@@ -56,6 +60,11 @@ Route::group(['prefix' => 'accounting', 'as' => 'accounting.', 'namespace' => 'A
     Route::resource('incomestatement', 'IncomeStatementController');
     Route::get('incomestatementdata', 'IncomeStatementController@incomestatementdata')->name('incomestatement.incomestatementdata');
     Route::get('incomestatement/report/{id}', 'IncomeStatementController@report')->name('incomestatement.report');
+
+    Route::resource('profit-sharing', 'ProfitSharingController');
+    Route::get('profit-sharing-data', "ProfitSharingController@profitSharingData")->name('profit-sharing.profit-sharing-data');
+    Route::get('profit-sharing/report/{profit_sharing}', "ProfitSharingController@report")->name("profit-sharing.report");
+    
 });
 
 // cashier or employeess

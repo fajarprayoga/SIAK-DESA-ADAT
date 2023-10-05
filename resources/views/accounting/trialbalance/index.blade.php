@@ -22,6 +22,7 @@
                         <tr>
                             <td>No</td>
                             <td>Tanggal</td>
+                            <td>Tanggal Selesai</td>
                             <td>Nama</td>
                             <td>Description</td>
                             <td>Status</td>
@@ -53,6 +54,10 @@
                     {
                         data: 'register',
                         name: 'register'
+                    },
+                    {
+                        data: 'end_date',
+                        name: 'end_date'
                     },
                     {
                         data: 'title',

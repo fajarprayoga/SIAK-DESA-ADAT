@@ -49,9 +49,19 @@ class MaterialController extends Controller
         $validatedData = $request->validate([
             'code' => 'required|unique:materials',
             'name' => 'required|unique:materials',
+            'cogs' => 'required',
+            'price' => 'required',
         ]);
 
-        $material = Material::create($request->all());
+        // $request->price_material ? str_replace(".","",  $request->price_material)  : 0,
+
+        $material = Material::create(
+            [
+                ...$request->all(),
+                'price' => $request->price ? str_replace(".", "", $request->price) : 0,
+                'cogs' => $request->cogs ? str_replace(".", "", $request->cogs) : 0,
+            ]
+        );
         return redirect()->back()->with('success', 'Success');
     }
 
@@ -70,7 +80,11 @@ class MaterialController extends Controller
 
     public function update(Request $request, Material $material)
     {
-        $material->update($request->all());
+        $material->update([
+            ...$request->all(),
+            'price' => $request->price ? str_replace(".", "", $request->price) : 0,
+            'cogs' => $request->cogs ? str_replace(".", "", $request->cogs) : 0,
+        ]);
         return redirect()->back()->with('success', 'Success');
     }
 
