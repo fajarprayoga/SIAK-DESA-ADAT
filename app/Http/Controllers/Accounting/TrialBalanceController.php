@@ -101,8 +101,7 @@ class TrialBalanceController extends Controller
                 ];
             }
 
-            $account = Account::latest()->get();
-
+            $account = Account::where('is_delete', 0)->latest()->get();
             foreach ($account as $key => $value) {
                 $trial_balance_detail[$key] = [
                     'date' => (new DateTime($trial_balance->register))->format('Y-m-d'),
@@ -117,7 +116,6 @@ class TrialBalanceController extends Controller
             return redirect()->route('accounting.trialbalance.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            // dd($th);
             return redirect()->back();
         }
     }
