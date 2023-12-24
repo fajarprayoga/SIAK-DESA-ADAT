@@ -58,7 +58,7 @@ return [
         'transaction' => 'Transaksi',
         'vehicle_number' => 'Nomor Kendaraan',
         'vehicle' => 'Kendaraan',
-        'type_material' => 'Material',
+        'type_material' => 'Item',
         'price_material' => 'Harga Barang',
         'nomor' => 'Nomor',
         'expense' => 'Pengeluaran',
@@ -84,9 +84,9 @@ return [
         'total' => "Total"
     ],
     'material' => [
-        'title' => 'Material',
+        'title' => 'Item',
         'code' => 'Kode',
-        'name' => 'Nama Material',
+        'name' => 'Nama Item',
         'add' => 'Akun Berhasil Di Tambahkan',
         'edit' => 'Akun Berhasil Di Update',
         'cogs' => 'Harga Jual',

@@ -108,36 +108,41 @@ class LedgerController extends Controller
                 $journal_id[$key] = $value->id;
             }
 
-            $journal_details = JournalDetail::whereIn('journal_id', $journal_id)->get();
+            if (count($journal) > 0) {
 
-            // insert ledger
-            $ledger = Ledger::create($request->all() + [
-                "start_date" => Carbon::parse("{$request->monthStart}-01"),
-                "end_date" => Carbon::parse("{$request->monthEnd}-01")->endOfMonth(),
-            ]);
+                $journal_details = JournalDetail::whereIn('journal_id', $journal_id)->get();
 
-            $ledger_detail_data = [];
-            // (new DateTime($journal_details[$i]->created_at))->format('Y-m-d');
-            for ($i = 0; $i < count($journal_details); $i++) {
-                $ledger_detail_data[$i] = [
-                    'date' => (new DateTime($journal_details[$i]->created_at))->format('Y-m-d'),
-                    'ledger_id' => $ledger->id,
-                    'account_id' => $journal_details[$i]->account_id,
-                    'types' => $journal_details[$i]->types,
-                    'amount' => $journal_details[$i]->amount,
-                    'description' => $journal_details[$i]->description
-                ];
+                // insert ledger
+                $ledger = Ledger::create($request->all() + [
+                    "start_date" => Carbon::parse("{$request->monthStart}-01"),
+                    "end_date" => Carbon::parse("{$request->monthEnd}-01")->endOfMonth(),
+                ]);
+
+                $ledger_detail_data = [];
+                // (new DateTime($journal_details[$i]->created_at))->format('Y-m-d');
+                for ($i = 0; $i < count($journal_details); $i++) {
+                    $ledger_detail_data[$i] = [
+                        'date' => (new DateTime($journal_details[$i]->created_at))->format('Y-m-d'),
+                        'ledger_id' => $ledger->id,
+                        'account_id' => $journal_details[$i]->account_id,
+                        'types' => $journal_details[$i]->types,
+                        'amount' => $journal_details[$i]->amount,
+                        'description' => $journal_details[$i]->description
+                    ];
+                }
+
+
+
+                $ledger->ledger_detail()->createMany($ledger_detail_data);
+
+                DB::commit();
+                return redirect()->route('accounting.ledger.index')->with('success', 'Success');
+            } else {
+                return redirect()->route('accounting.ledger.index')->with('error', 'Jurnal pada bulan yang ditentukan tidak ada!');
             }
-
-
-
-            $ledger->ledger_detail()->createMany($ledger_detail_data);
-
-            DB::commit();
-            return redirect()->route('accounting.ledger.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th->getTraceAsString());
+            // dd($th->getMessage(), $th->getTraceAsString());
             return redirect()->back();
         }
     }
