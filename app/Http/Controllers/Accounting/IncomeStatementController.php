@@ -76,6 +76,8 @@ class IncomeStatementController extends Controller
     {
         DB::beginTransaction();
         try {
+            $expense = 0;
+            $amount = 0;
             $trial_balance = TrialBalanceDetail::where('trial_balance_id', $request->trial_balance_id)
                 ->join('accounts', function ($join) {
                     $join->on('trial_balance_detail.account_id', '=', 'accounts.id')
@@ -122,6 +124,7 @@ class IncomeStatementController extends Controller
 
 
             foreach ($trial_balance as $index => $value) {
+                $expense += $value->amount;
                 $income_table_detail[$index] = [
                     'incomestatement_id' => $income_table->id,
                     'name' => $value->name,
@@ -133,16 +136,7 @@ class IncomeStatementController extends Controller
             }
 
 
-            foreach ($pengeluaran as $index => $value) {
-                $income_table_detail[$index] = [
-                    'incomestatement_id' => $income_table->id,
-                    'name' => $value,
-                    'expense' => (int) str_replace(".", "", $request->amount[$index]),
-                    'account_id' => null,
-                    'amount' => 0,
-                    'type' => 'expense'
-                ];
-            }
+
 
             //pendapatan
             // dd($pendapatan);
@@ -163,6 +157,7 @@ class IncomeStatementController extends Controller
             // ];
 
             foreach ($transactions as $index => $transaction) {
+                $amount += $transaction->total_transaction - $transaction->cogs_total;
                 $income_table_detail[] = [
                     'incomestatement_id' => $income_table->id,
                     'name' => "Penjualan " . $transaction->material->name,
@@ -170,6 +165,17 @@ class IncomeStatementController extends Controller
                     'account_id' => null,
                     'expense' => 0,
                     'type' => 'income',
+                ];
+            }
+
+            foreach ($pengeluaran as $index => $value) {
+                $income_table_detail[$index] = [
+                    'incomestatement_id' => $income_table->id,
+                    'name' => $value,
+                    'expense' => 0.5 * $amount - $expense,
+                    'account_id' => null,
+                    'amount' => 0,
+                    'type' => 'expense'
                 ];
             }
 
