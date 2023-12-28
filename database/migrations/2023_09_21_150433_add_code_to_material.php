@@ -15,7 +15,7 @@ class AddCodeToMaterial extends Migration
     {
         Schema::table('materials', function (Blueprint $table) {
             //
-            $table->string("code")->unique();
+            $table->string("code")->unique()->nullable();
         });
     }
 
