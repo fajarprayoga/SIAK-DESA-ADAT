@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Accounting;
 
 use App\Http\Controllers\Controller;
@@ -54,7 +55,7 @@ class ProfitSharingController extends Controller
 
     public function create()
     {
-        $incomestatements = Incomestatement::where("status", "approved")->get();
+        $incomestatements = Incomestatement::get();
 
         return view("accounting.profit-sharing.create", compact("incomestatements"));
     }
@@ -65,7 +66,7 @@ class ProfitSharingController extends Controller
 
         $incomestatement = Incomestatement::query()->where("id", $payload["incomestatement_id"])->first();
 
-        $incomestatementTotal = $incomestatement->incomestatement_detail->sum(fn($detail) => $detail->amount - $detail->expense);
+        $incomestatementTotal = $incomestatement->incomestatement_detail->sum(fn ($detail) => $detail->amount - $detail->expense);
 
         $totalEmployee = User::query()->whereIn("role", [
             "employes"
@@ -98,26 +99,23 @@ class ProfitSharingController extends Controller
             ]);
 
         return redirect()->route("accounting.profit-sharing.index");
-
     }
 
     public function show()
     {
-
     }
 
     public function edit()
     {
-
     }
 
     public function update()
     {
-
     }
 
     public function report(ProfitSharing $profit_sharing)
     {
+        dd($profit_sharing);
         $pdf = PDF::loadview('accounting.profit-sharing.report', compact("profit_sharing"));
         return $pdf->stream();
     }
@@ -135,5 +133,4 @@ class ProfitSharingController extends Controller
 
         return redirect()->route('accounting.profit-sharing.index')->with("message", "Delete Success");
     }
-
 }

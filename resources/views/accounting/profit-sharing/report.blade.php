@@ -44,7 +44,8 @@
                 <tr>
                     <td>{{ __("global.profit-sharing.{$detail['name']}") }}</td>
                     <td>{{ $detail['qty'] }}</td>
-                    <td>{{ ($detail['value'] / $profit_sharing->details['incomestatement']) * 100 }}%</td>
+                    <td>{{ $profit_sharing->details['incomestatement'] == 0 ? 0 : ($detail['value'] / $profit_sharing->details['incomestatement']) * 100 }}%
+                    </td>
                     <td>{{ Rupiah(str_replace('-', '', $detail['value'])) }} </td>
                     <td style="width: 3px"></td>
                 </tr>
