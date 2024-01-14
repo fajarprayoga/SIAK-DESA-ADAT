@@ -115,7 +115,6 @@ class ProfitSharingController extends Controller
 
     public function report(ProfitSharing $profit_sharing)
     {
-        dd($profit_sharing);
         $pdf = PDF::loadview('accounting.profit-sharing.report', compact("profit_sharing"));
         return $pdf->stream();
     }
