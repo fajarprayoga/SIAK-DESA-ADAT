@@ -118,9 +118,9 @@ class IncomeStatementController extends Controller
             $income_table_detail = [];
             // expense
 
-            $pengeluaran = [
-                "Potongan Biaya Karyawan"
-            ];
+            // $pengeluaran = [
+            //     "Potongan Biaya Karyawan"
+            // ];
 
 
             foreach ($trial_balance as $index => $value) {
@@ -168,16 +168,16 @@ class IncomeStatementController extends Controller
                 ];
             }
 
-            foreach ($pengeluaran as $index => $value) {
-                $income_table_detail[$index] = [
-                    'incomestatement_id' => $income_table->id,
-                    'name' => $value,
-                    'expense' => 0.5 * $amount - $expense,
-                    'account_id' => null,
-                    'amount' => 0,
-                    'type' => 'expense'
-                ];
-            }
+            // foreach ($pengeluaran as $index => $value) {
+            //     $income_table_detail[$index] = [
+            //         'incomestatement_id' => $income_table->id,
+            //         'name' => $value,
+            //         'expense' => 0.5 * $amount - $expense,
+            //         'account_id' => null,
+            //         'amount' => 0,
+            //         'type' => 'expense'
+            //     ];
+            // }
 
 
             // dd($income_table_detail);

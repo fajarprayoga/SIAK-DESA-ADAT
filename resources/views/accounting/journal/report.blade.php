@@ -31,6 +31,10 @@
             </tr>
         </thead>
         <tbody style="font-size: 7pt">
+            <?php
+            $debet = 0;
+            $credit = 0;
+            ?>
             @foreach ($journal->journal_detail as $index => $detail)
                 <tr>
                     <td>{{ date('d F Y', strtotime($detail->updated_at)) }}</td>
@@ -39,7 +43,27 @@
                     <td>{{ $detail->types == 'debit' ? Rupiah($detail->amount) : '' }}</td>
                     <td>{{ $detail->types == 'credit' ? Rupiah($detail->amount) : '' }}</td>
                 </tr>
+                <?php
+                if ($detail->types == 'debit') {
+                    $debet += $detail->amount;
+                }
+                if ($detail->types == 'credit') {
+                    $credit += $detail->amount;
+                }
+                ?>
             @endforeach
+
+            <tr>
+                <td colspan="3">
+                    Total
+                </td>
+                <td>
+                    {{ Rupiah($debet) }}
+                </td>
+                <td>
+                    {{ Rupiah($credit) }}
+                </td>
+            </tr>
         </tbody>
     </table>
 
