@@ -114,8 +114,8 @@ class TransactionController extends Controller
             $cost_of_goods = $request->cost_of_goods ? str_replace(".", "", $request->cost_of_goods) : 0;
 
             Material::query()->where("id", $request->material_id)->update([
-                "cogs" => $price_material,
-                "price" => $cost_of_goods
+                "cogs" => $cost_of_goods,
+                "price" => $price_material
             ]);
 
             $data = array(

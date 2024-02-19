@@ -80,6 +80,7 @@ class MaterialController extends Controller
 
     public function update(Request $request, Material $material)
     {
+        // dd($request->all());
         $material->update([
             ...$request->all(),
             'price' => $request->price ? str_replace(".", "", $request->price) : 0,

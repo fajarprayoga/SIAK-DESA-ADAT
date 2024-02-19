@@ -89,8 +89,8 @@ return [
         'name' => 'Nama Item',
         'add' => 'Akun Berhasil Di Tambahkan',
         'edit' => 'Akun Berhasil Di Update',
-        'cogs' => 'Harga Jual',
-        'price' => 'Harga Pokok',
+        'cogs' => 'Harga Pokok',
+        'price' => 'Harga Jual',
     ],
     'trialbalance' => [
         'trialbalance' => 'Neraca Saldo',

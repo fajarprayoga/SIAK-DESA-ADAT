@@ -21,14 +21,14 @@
                                 name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="cogs" class="form-label ">@lang('global.material.price')</label>
-                            <input class="form-control price" type="text" id="price" name="price"
-                                value="{{ number_format($material->price, 0,',','.') }}" required>
+                            <label for="cogs" class="form-label ">@lang('global.material.cogs')</label>
+                            <input class="form-control price" type="text" id="cogs" name="cogs"
+                                value="{{ number_format($material->cogs, 0, ',', '.') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label ">@lang('global.material.cogs')</label>
-                            <input class="form-control price" type="text" id="cogs" name="cogs"
-                            value="{{ number_format($material->cogs, 0,',','.') }}" required>
+                            <label for="price" class="form-label ">@lang('global.material.price')</label>
+                            <input class="form-control price" type="text" id="price" name="price"
+                                value="{{ number_format($material->price, 0, ',', '.') }}" required>
                         </div>
                         <div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
