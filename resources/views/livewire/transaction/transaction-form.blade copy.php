@@ -20,15 +20,15 @@
                             name="date" required>
                     </div>
                 </div>
-                @foreach ($forms as $index => $item)
+                @foreach ($forms as $item)
                     <div class="col-md-12 border border-solid border-primary p-2 mb-3">
                         <div class="row">
                             <div class="col-md-6 ">
                                 <div class="mb-3">
                                     <label for="material_id" class="form-label">@lang('global.transaction.name_property')</label>
                                     <div wire:ignore>
-                                        <select name="material_id[]" id={{ "select-material$index" }}
-                                            class="form-control select2">
+                                        <select name="material_id" id="select-material" class="form-control"
+                                            wire:model="material_id">
                                             @if (!$update)
                                                 <option value="">----</option>
                                             @endif
@@ -42,26 +42,33 @@
 
                                 </div>
                             </div>
+                            {{-- <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cost_of_goods" class="form-label">@lang('global.transaction.cost_of_goods')</label>
+                                <input class="form-control price" value="{{ $transaction?->cost_of_goods }}" type="text"
+                                    id="cost_of_goods" name="cost_of_goods" wire:model="cogs" required>
+                            </div>
+                        </div> --}}
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="price_material" class="form-label">@lang('global.transaction.price_material')</label>
-                                    <input class="form-control price" type="text" id={{ "price_material$index" }}
-                                        name="price_material[]" value="{{ $transaction?->price_material }}"
+                                    <input class="form-control price" type="text" id="price_material"
+                                        name="price_material" value="{{ $transaction?->price_material }}"
                                         wire:model="price" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">@lang('global.transaction.quantity')</label>
-                                    <input class="form-control price" type="number" id={{ "quantity$index" }}
-                                        name="quantity[]" value="{{ $transaction?->quantity }}">
+                                    <input class="form-control price" type="number" id="quantity" name="quantity"
+                                        value="{{ $transaction?->quantity }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="discount" class="form-label">@lang('global.transaction.discount')</label>
-                                    <input class="form-control price" type="number" id={{ "discount${index}" }}
-                                        value="{{ $transaction?->discount }}" name="discount[]">
+                                    <input class="form-control price" type="number" id="discount"
+                                        value="{{ $transaction?->discount }}" name="discount">
                                 </div>
                             </div>
                         </div>

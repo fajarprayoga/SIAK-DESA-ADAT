@@ -30,21 +30,21 @@ class TransactionForm extends Component
         $this->forms[count($this->forms)] = [];
     }
 
-    public function mount($transaction = null)
-    {
-        $this->price = $transaction?->price_material;
-        $this->cogs = $transaction?->cost_of_goods;
-    }
+    // public function mount($transaction = null)
+    // {
+    //     $this->price = $transaction?->price_material;
+    //     $this->cogs = $transaction?->cost_of_goods;
+    // }
 
-    public function updatedMaterialId($value)
-    {
-        $material = $this->materials->where("id", $value)->first();
+    // public function updatedMaterialId($value)
+    // {
+    //     $material = $this->materials->where("id", $value)->first();
 
-        if (!$material) {
-            return $this->reset("price", "cogs");
-        }
-        // dd($material);
-        $this->price = number_format($material->price, 0, ',', '.') ?? 0;
-        $this->cogs = number_format($material->cogs, 0, ',', '.') ?? 0;
-    }
+    //     if (!$material) {
+    //         return $this->reset("price", "cogs");
+    //     }
+    //     // dd($material);
+    //     $this->price = number_format($material->price, 0, ',', '.') ?? 0;
+    //     $this->cogs = number_format($material->cogs, 0, ',', '.') ?? 0;
+    // }
 }
