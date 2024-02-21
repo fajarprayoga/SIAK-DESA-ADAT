@@ -103,6 +103,7 @@ class TransactionController extends Controller
      */
     public function store(TransactionRequestCreate $request)
     {
+        dd($request->all());
         DB::beginTransaction();
 
         try {

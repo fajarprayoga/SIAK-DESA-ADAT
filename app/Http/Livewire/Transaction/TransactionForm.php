@@ -13,10 +13,18 @@ class TransactionForm extends Component
     public $cogs = 0;
     public $transaction;
     public bool $update = false;
-    public array $forms = [
-        []
-    ];
+    public array $forms = [];
 
+
+    function mount()
+    {
+        array_push($this->forms, [
+            "material_id" => null,
+            "price_material" => 0,
+            "quantity" => 0,
+            "discount" => 0
+        ]);
+    }
 
     public function render()
     {
@@ -27,24 +35,11 @@ class TransactionForm extends Component
 
     public function addTransactions()
     {
-        $this->forms[count($this->forms)] = [];
+        array_push($this->forms, [
+            "material_id" => null,
+            "price_material" => 0,
+            "quantity" => 0,
+            "discount" => 0
+        ]);
     }
-
-    // public function mount($transaction = null)
-    // {
-    //     $this->price = $transaction?->price_material;
-    //     $this->cogs = $transaction?->cost_of_goods;
-    // }
-
-    // public function updatedMaterialId($value)
-    // {
-    //     $material = $this->materials->where("id", $value)->first();
-
-    //     if (!$material) {
-    //         return $this->reset("price", "cogs");
-    //     }
-    //     // dd($material);
-    //     $this->price = number_format($material->price, 0, ',', '.') ?? 0;
-    //     $this->cogs = number_format($material->cogs, 0, ',', '.') ?? 0;
-    // }
 }
