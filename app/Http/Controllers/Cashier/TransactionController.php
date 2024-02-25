@@ -103,82 +103,83 @@ class TransactionController extends Controller
      */
     public function store(TransactionRequestCreate $request)
     {
-        dd($request->all());
         DB::beginTransaction();
 
+        $data = $request->validated();
         try {
-            $last_code = $this->getLastCode();
-            $transaction_nomor = $this->acc_code_generate($last_code, 8, 3);
 
-            // dd($request->date);
-            $price_material = $request->price_material ? str_replace(".", "", $request->price_material) : 0;
-            $cost_of_goods = $request->cost_of_goods ? str_replace(".", "", $request->cost_of_goods) : 0;
+            foreach ($data["material_id"] as $key => $material_id) {
+                $last_code = $this->getLastCode();
+                $transaction_nomor = $this->acc_code_generate($last_code, 8, 3);
 
-            Material::query()->where("id", $request->material_id)->update([
-                "cogs" => $cost_of_goods,
-                "price" => $price_material
-            ]);
+                $price_material = $data['price_material'][$key] ? str_replace(".", "", $data['price_material'][$key]) : 0;
+                //$cost_of_goods = $data['cost_of_goods'][$key] ? str_replace(".", "", $data['price_material'][$key]) : 0;
+                $material = Material::query()->find($material_id);
+                $material->update([
+                    // "cogs" => $price_material,
+                    "price" => $price_material
+                ]);
 
-            $data = array(
-                'nomor' => $transaction_nomor,
-                'material_id' => $request->material_id,
-                'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) : date('Y-m-d'),
-                'name' => $request->name_property,
-                'discount' => $request->discount ?? 0,
-                'quantity' => $request->quantity,
-                'price_material' => $price_material,
-                'cost_of_goods' => $cost_of_goods,
-                'total' => ($price_material * $request->quantity) - (($price_material * $request->quantity) * ($request->discount / 100))
-            );
-
-
-            $transaction = Transaction::create($data);
-
-            if ($request->gosek != null || $request->gosek != '') {
-                $expense = array(
+                $transaction_data = array(
+                    'nomor' => $transaction_nomor,
+                    'material_id' => $material_id,
                     'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) : date('Y-m-d'),
-                    'expense' => $request->gosek ? str_replace(".", "", $request->gosek) : 0,
-                    'transaction_id' => $transaction->id
+                    'name' => $material->name,
+                    'discount' => $data['discount'][$key] ?? 0,
+                    'quantity' => $data['quantity'][$key],
+                    'price_material' => $price_material,
+                    'cost_of_goods' => 0,
+                    'total' => ($price_material * $data['quantity'][$key]) - (($price_material * $data['quantity'][$key]) * ($data['discount'][$key] / 100))
                 );
-                // create gosek
-                Gosek::create($expense);
-            }
 
-            // penjualan total - gosek * 25%
+                $transaction = Transaction::create($transaction_data);
 
-            $pemilik = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik')->first();
-            $sum = 0;
-            if (!is_null($pemilik)) {
-                $t_transaction = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('expense', 0)->get();
-                $t_transaction = json_decode($t_transaction, true);
-                $sum_transaction = array_sum(array_map(function ($var) {
-                    return $var['price_material'];
-                }, $t_transaction));
-
-
-
-                // // get trasaksi gosek
-                $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
-                $t_gosek = json_decode($t_gosek, true);
-                if (!is_null(($t_gosek))) {
-                    $sum_gosek = array_sum(array_map(function ($var) {
-                        return $var['expense'];
-                    }, $t_gosek));
+                if ($request->gosek != null || $request->gosek != '') {
+                    $expense = array(
+                        'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) : date('Y-m-d'),
+                        'expense' => $request->gosek ? str_replace(".", "", $request->gosek) : 0,
+                        'transaction_id' => $transaction->id
+                    );
+                    // create gosek
+                    Gosek::create($expense);
                 }
 
-                $sum = ($sum_transaction - $sum_gosek) * (25 / 100);
-                // $pemilik->update(['expense' => $sum]);
-                Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik')
-                    ->update(['expense' => $sum]);
+                // penjualan total - gosek * 25%
+
+                $pemilik = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik')->first();
+                $sum = 0;
+                if (!is_null($pemilik)) {
+                    $t_transaction = Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('expense', 0)->get();
+                    $t_transaction = json_decode($t_transaction, true);
+                    $sum_transaction = array_sum(array_map(function ($var) {
+                        return $var['price_material'];
+                    }, $t_transaction));
+
+
+
+                    // // get trasaksi gosek
+                    $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
+                    $t_gosek = json_decode($t_gosek, true);
+                    if (!is_null(($t_gosek))) {
+                        $sum_gosek = array_sum(array_map(function ($var) {
+                            return $var['expense'];
+                        }, $t_gosek));
+                    }
+
+                    $sum = ($sum_transaction - $sum_gosek) * (25 / 100);
+                    // $pemilik->update(['expense' => $sum]);
+                    Transaction::where('created_at', date('Y-m-d', strtotime($request->date)))->where('vehicle_number', 'pemilik')
+                        ->update(['expense' => $sum]);
+                }
+
+                DB::commit();
             }
-
-
-            DB::commit();
             return redirect()->route('cashier.transaction.index')->with('success', 'Success');
         } catch (\Throwable $th) {
 
-            dd($th->getMessage());
+
             DB::rollBack();
+            throw $th;
             return redirect()->back();
         }
 
