@@ -33,7 +33,7 @@ class TransactionForm extends Component
     public function updatedMaterialId($value, $key)
     {
         $material = $this->materials->where("id", $value)->first();
-        $this->price[$key] = $material->price;
+        $this->price[$key] = number_format ($material->price,0,',','.');
 
         $this->dispatchBrowserEvent('applySelect2', [
             "index" => $key
