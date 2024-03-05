@@ -17,6 +17,25 @@ class TransactionForm extends Component
 
     function mount()
     {
+        // if (count($this->transaction) > 0) {
+        //     foreach ($this->transaction as $key => $value) {
+        //         array_push($this->forms, [
+        //             "material_id" => $value['material_id'],
+        //             "price_material" => $value['price_material'],
+        //             "quantity" => $value['quantity'],
+        //             "discount" => $value['discount'],
+        //         ]);
+        //     }
+        // } else {
+
+        //     array_push($this->forms, [
+        //         "material_id" => null,
+        //         "price_material" => 0,
+        //         "quantity" => 0,
+        //         "discount" => 0
+        //     ]);
+        // }
+
         array_push($this->forms, [
             "material_id" => null,
             "price_material" => 0,
@@ -33,7 +52,7 @@ class TransactionForm extends Component
     public function updatedMaterialId($value, $key)
     {
         $material = $this->materials->where("id", $value)->first();
-        $this->price[$key] = number_format ($material->price,0,',','.');
+        $this->price[$key] = number_format($material->price, 0, ',', '.');
 
         $this->dispatchBrowserEvent('applySelect2', [
             "index" => $key
@@ -55,6 +74,4 @@ class TransactionForm extends Component
             "discount" => 0
         ]);
     }
-
-
 }

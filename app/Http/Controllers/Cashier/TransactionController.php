@@ -323,6 +323,7 @@ class TransactionController extends Controller
             ]);
 
 
+
             $transaction->update($data);
 
             // if ($request->gosek != null || $request->gosek != '') {
@@ -374,7 +375,6 @@ class TransactionController extends Controller
             return redirect()->route('cashier.transaction.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            // dd($th);
             return redirect()->back();
         }
     }
